@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payroll Productivity Drain Calculator | Work Healthy Australia</title>
+  <meta name="description" content="Calculate the hidden productivity drain sitting around a workers' compensation claim — absence, modified duties, replacement labour, overtime, and coordination time." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset ─────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ── Brand tokens ───────────────────────────────────────────────────── */
+    :root {
+      --wha-ink:        #2C2C3E;
+      --wha-ink-soft:   #5A5A72;
+      --wha-purple:     #6B6B9A;
+      --wha-gold:       #C9A840;
+      --wha-mauve:      #A8829A;
+      --wha-lavender:   #9488B4;
+      --primary:        #1B6080;
+      --primary-dark:   #144D66;
+      --primary-light:  #E8F4F8;
+      --success:        #1E7A50;
+      --success-bg:     #E6F4EE;
+      --warning:        #B07030;
+      --warning-bg:     #FBF0E0;
+      --bg:             #F2F5F8;
+      --surface:        #FFFFFF;
+      --surface-warm:   #FAF9F7;
+      --border:         #E2E8ED;
+      --border-strong:  #C5D0D9;
+      --font-display:   "Bricolage Grotesque", sans-serif;
+      --font-body:      "Inter", ui-sans-serif, system-ui, sans-serif;
+    }
+
+    /* ── Base ───────────────────────────────────────────────────────────── */
+    body {
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--wha-ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────────────── */
+    .site-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 clamp(1.25rem, 5vw, 4rem);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1240px;
+      margin: 0 auto;
+      height: 64px;
+      gap: 1rem;
+    }
+    .logo-img { height: 40px; width: auto; display: block; }
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.25rem;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: background 120ms ease;
+    }
+    .nav-cta:hover { background: var(--primary-dark); }
+
+    /* ── Hero ───────────────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(140deg, var(--wha-ink) 0%, #1A3350 55%, #1B6080 100%);
+      color: #fff;
+      padding: clamp(2.5rem, 7vw, 4.5rem) clamp(1.25rem, 5vw, 4rem);
+    }
+    .hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--wha-gold);
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.875rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .hero h1 em { font-style: normal; color: var(--wha-gold); }
+    .hero-lead {
+      font-size: clamp(0.9375rem, 2vw, 1.125rem);
+      color: rgba(255,255,255,0.78);
+      max-width: 640px;
+      line-height: 1.65;
+      margin-bottom: 2rem;
+    }
+    .hero-chips {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .hero-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 100px;
+      padding: 0.35rem 0.875rem;
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.85);
+      font-weight: 500;
+    }
+    .hero-chip .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--wha-gold);
+      flex-shrink: 0;
+    }
+
+    /* ── ROI banner ─────────────────────────────────────────────────────── */
+    .roi-banner {
+      background: linear-gradient(90deg, var(--wha-gold) 0%, #D9B840 100%);
+      padding: 0.875rem clamp(1.25rem, 5vw, 4rem);
+    }
+    .roi-banner-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(1.5rem, 5vw, 4rem);
+      flex-wrap: wrap;
+    }
+    .roi-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .roi-stat-num {
+      font-family: var(--font-display);
+      font-size: 1.625rem;
+      font-weight: 700;
+      color: var(--wha-ink);
+      line-height: 1;
+    }
+    .roi-stat-text {
+      font-size: 0.8125rem;
+      color: var(--wha-ink);
+      font-weight: 600;
+      line-height: 1.35;
+      opacity: 0.75;
+    }
+    .roi-divider {
+      width: 1px;
+      height: 32px;
+      background: rgba(44,44,62,0.2);
+    }
+
+    /* ── Main layout ────────────────────────────────────────────────────── */
+    .main-wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: clamp(1.75rem, 4vw, 3rem) clamp(1.25rem, 5vw, 2rem);
+    }
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 960px) {
+      .calc-layout {
+        grid-template-columns: minmax(0,1.1fr) minmax(0,0.9fr);
+        align-items: start;
+      }
+    }
+
+    /* ── Card ───────────────────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(27,50,80,0.07);
+    }
+    .card-body { padding: clamp(1.25rem, 3vw, 1.75rem); }
+    .card-head {
+      padding: 1.125rem clamp(1.25rem, 3vw, 1.75rem);
+      background: var(--surface-warm);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .card-icon {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .card-icon-blue  { background: var(--primary-light); }
+    .card-icon-gold  { background: rgba(201,168,64,0.12); }
+    .card-icon-green { background: var(--success-bg); }
+    .card-head-text { flex: 1; }
+    .card-head-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--wha-ink);
+      line-height: 1.2;
+    }
+    .card-head-sub {
+      font-size: 0.8125rem;
+      color: var(--wha-ink-soft);
+      margin-top: 0.15rem;
+    }
+    .card-sticky { position: sticky; top: 76px; }
+
+    /* ── Section headers ────────────────────────────────────────────────── */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.5rem 0 1rem;
+    }
+    .section-divider:first-child { margin-top: 0; }
+    .section-divider-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .section-divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .section-label {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    /* ── Field ──────────────────────────────────────────────────────────── */
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .field-grid-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    .field-full { grid-column: 1 / -1; }
+    .field { display: flex; flex-direction: column; gap: 0.375rem; }
+    .field label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--wha-ink);
+    }
+    .field-sub {
+      font-size: 0.75rem;
+      color: var(--wha-ink-soft);
+      font-weight: 400;
+      margin-top: 0.1rem;
+    }
+    .input-wrap {
+      display: flex;
+      align-items: center;
+    }
+    .input-prefix, .input-suffix {
+      padding: 0.5625rem 0.625rem;
+      background: var(--bg);
+      border: 1.5px solid var(--border-strong);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--wha-ink-soft);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .input-prefix { border-right: none; border-radius: 8px 0 0 8px; }
+    .input-suffix { border-left: none; border-radius: 0 8px 8px 0; }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.5625rem 0.75rem;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--wha-ink);
+      background: var(--surface);
+      transition: border-color 120ms ease, box-shadow 120ms ease;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    input[type="number"]:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(27,96,128,0.12);
+    }
+    .input-wrap input[type="number"],
+    .input-wrap select {
+      border-radius: 0 8px 8px 0;
+    }
+    .input-wrap.suffix-only input[type="number"] {
+      border-radius: 8px 0 0 8px;
+    }
+    .input-no-affix {
+      border-radius: 8px !important;
+    }
+    select { cursor: pointer; }
+
+    /* Optional toggle */
+    .optional-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 0;
+      cursor: pointer;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--primary);
+      user-select: none;
+      width: fit-content;
+    }
+    .toggle-icon {
+      font-size: 1rem;
+      transition: transform 160ms ease;
+    }
+    .optional-section { display: none; }
+    .optional-section.open { display: block; }
+    .toggle-icon.open { transform: rotate(45deg); }
+
+    /* Coord row */
+    .coord-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 0.75rem;
+      align-items: end;
+      margin-bottom: 0.75rem;
+    }
+    .coord-row-label {
+      font-size: 0.8125rem;
+      color: var(--wha-ink-soft);
+      font-weight: 500;
+      padding-bottom: 0.625rem;
+    }
+
+    /* ── Results panel ──────────────────────────────────────────────────── */
+    .result-hero {
+      background: linear-gradient(140deg, var(--wha-ink) 0%, #1A3350 100%);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .result-hero-eyebrow {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 0.5rem;
+    }
+    .result-hero-num {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 5vw, 3rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+    }
+    .result-hero-sub {
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 0.375rem;
+    }
+    .result-hero-runrate {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.875rem;
+      background: rgba(201,168,64,0.15);
+      border: 1px solid rgba(201,168,64,0.25);
+      border-radius: 8px;
+      padding: 0.5rem 0.875rem;
+    }
+    .result-hero-runrate-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.6);
+      font-weight: 500;
+    }
+    .result-hero-runrate-num {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--wha-gold);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Cost breakdown rows */
+    .breakdown-section { padding: 0 1.5rem 1rem; }
+    .breakdown-title {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--wha-purple);
+      padding: 1rem 0 0.625rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+    }
+    .breakdown-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .breakdown-row:last-child { border-bottom: none; }
+    .breakdown-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.625rem;
+      flex: 1;
+      min-width: 0;
+    }
+    .brow-pip {
+      width: 3px;
+      height: 100%;
+      min-height: 16px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .brow-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--wha-ink);
+      line-height: 1.3;
+    }
+    .brow-formula {
+      font-size: 0.75rem;
+      color: var(--wha-purple);
+      margin-top: 0.15rem;
+    }
+    .brow-amount {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--wha-ink);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .brow-amount.negative { color: var(--success); }
+    .brow-amount.zero { color: var(--wha-purple); opacity: 0.5; }
+
+    /* Bar */
+    .bar-wrap { height: 3px; background: var(--border); border-radius: 100px; margin-top: 0.375rem; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 100px; transition: width 300ms ease; }
+
+    /* WHA savings block */
+    .wha-block {
+      margin: 0 1.5rem 1.5rem;
+      background: linear-gradient(135deg, var(--success-bg) 0%, #CDE8DA 100%);
+      border: 1.5px solid rgba(30,122,80,0.2);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .wha-block-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .wha-block-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--success);
+    }
+    .wha-badge {
+      background: var(--success);
+      color: #fff;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.275rem 0.625rem;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .wha-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(30,122,80,0.12);
+    }
+    .wha-row:last-of-type { border-bottom: none; }
+    .wha-row-label { font-size: 0.875rem; color: var(--success); font-weight: 500; }
+    .wha-row-value { font-size: 0.9375rem; font-weight: 700; color: var(--success); font-variant-numeric: tabular-nums; }
+
+    /* ROI chips */
+    .roi-chips {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin: 0 1.5rem 1.5rem;
+    }
+    .roi-chip {
+      background: var(--surface-warm);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .roi-chip-num {
+      font-family: var(--font-display);
+      font-size: 1.625rem;
+      font-weight: 700;
+      line-height: 1;
+      display: block;
+      font-variant-numeric: tabular-nums;
+    }
+    .roi-chip-num-gold {
+      color: var(--wha-ink);
+      background: var(--wha-gold);
+      border-radius: 6px;
+      padding: 0.25rem 0.5rem;
+      display: inline-block;
+    }
+    .roi-chip-label {
+      font-size: 0.75rem;
+      color: var(--wha-ink-soft);
+      margin-top: 0.4rem;
+      display: block;
+      line-height: 1.35;
+    }
+
+    /* CTA */
+    .cta-block {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: 12px;
+      margin: 0 1.5rem 1.5rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .cta-block h3 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.375rem;
+    }
+    .cta-block p {
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      width: 100%;
+      padding: 0.8125rem 1.5rem;
+      background: var(--wha-gold);
+      color: var(--wha-ink);
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9375rem;
+      transition: background 120ms ease, transform 100ms ease;
+    }
+    .cta-btn:hover { background: #D9B840; transform: translateY(-1px); }
+    .cta-note {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 0.625rem;
+    }
+
+    /* ── Methodology section ────────────────────────────────────────────── */
+    .method-section {
+      margin-top: 2.5rem;
+    }
+    .method-head {
+      margin-bottom: 1.25rem;
+    }
+    .method-head h2 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--wha-ink);
+    }
+    .method-head p {
+      font-size: 0.9375rem;
+      color: var(--wha-ink-soft);
+      margin-top: 0.3rem;
+    }
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .method-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .method-pip {
+      width: 32px;
+      height: 4px;
+      border-radius: 2px;
+      margin-bottom: 0.875rem;
+    }
+    .method-card h4 {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--wha-ink);
+      margin-bottom: 0.375rem;
+    }
+    .method-card p {
+      font-size: 0.8125rem;
+      color: var(--wha-ink-soft);
+      line-height: 1.6;
+    }
+    .method-formula {
+      margin-top: 0.625rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      color: var(--wha-purple);
+      font-family: ui-monospace, Menlo, monospace;
+      line-height: 1.5;
+    }
+
+    /* ── Disclaimer ─────────────────────────────────────────────────────── */
+    .disclaimer {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--wha-purple);
+      line-height: 1.6;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────────────────── */
+    footer {
+      background: var(--wha-ink);
+      color: rgba(255,255,255,0.55);
+      padding: 2rem clamp(1.25rem, 5vw, 4rem);
+      text-align: center;
+      font-size: 0.8125rem;
+      margin-top: 3rem;
+    }
+    footer a { color: rgba(255,255,255,0.75); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-inner { max-width: 1240px; margin: 0 auto; }
+    .footer-logo {
+      height: 34px; width: auto;
+      display: block; margin: 0 auto 0.875rem;
+      filter: brightness(0) invert(1); opacity: 0.7;
+    }
+    .footer-links {
+      display: flex; justify-content: center; gap: 1.5rem;
+      flex-wrap: wrap; margin-bottom: 0.625rem;
+    }
+
+    /* ── Responsive tweaks ──────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .field-grid { grid-template-columns: 1fr; }
+      .field-grid-3 { grid-template-columns: 1fr; }
+      .coord-row { grid-template-columns: 1fr 1fr; }
+      .coord-row-label { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────────── -->
+<header class="site-header">
+  <div class="nav-inner">
+    <img class="logo-img"
+      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABxCAYAAABSrainAAABJ2lDQ1BrQ0dDb2xvclNwYWNlQWRvYmVSR0IxOTk4AAAokWNgYFJILCjIYRJgYMjNKykKcndSiIiMUmB/ysDBIMHAx2DGYJSYXFzgGBDgwwAEMBoVfLvGwAiiL+uCzMKUxwu4UlKLk4H0HyDOTi4oKmFgYMwAspXLSwpA7B4gWyQpG8xeAGIXAR0IZG8BsdMh7BNgNRD2HbCakCBnIPsDkM2XBGYzgeziS4ewBUBsqL0gIOiYkp+UqgDyvYahpaWFJol+IAhKUitKQLRzfkFlUWZ6RomCIzCkUhU885L1dBSMDIwMGRhA4Q5R/TkQHJ6MYmcQYgiAEJsjwcDgv5SBgeUPQsykl4FhgQ4DA/9UhJga0HQBfQaGfXOSS4vKoMYwMhkzMBDiAwCR6UqOzYaB1AAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAoKADAAQAAAABAAAAcQAAAAAwsW1aAAAll0lEQVR4Ae1dB5wURdZ/mxMbgAWWvIQl55yDJAMCgoqCeBgAwynG8/jM6Hl6YjyMiKgYOBAERERBAQFBcg5LzhkWNrLxe//erZ7qnu6ZntmZ2WWZ9/vtdnWlrq5+U/VyBRQwkB9K3QwU5OcRBQRSQEBAqRubJwcU6MnO/H15cAYY+S7uWk2pR3Z5sNPS11WAfwUsfR9FHtGpNT9SXlY6Vel0MwWHR8lFZSLtXwFL+WdMYMQLCAqmQ/MnU8bpw6V8tK4Pz4+Ars+Zz1skdB5MwRHRdGTRVLq0b5PPn+/NB/oR0Juz66G+A4NDqHrvERQUGk4nV86mCzv+9FDPJd+NHwFL/htYGkFIuTiq2m2YUvfMuoV0cfdfltqV9kp+JoS/UH5uBuVnHqe8K+co/8pFKshNp4K8TOJ/yvcLCApliUgEBYTGUGBouQoKT6DA8CqcF+zz73tixfd0ef9mfm4AVe8zkqJrNvL5GDz5wGsWAQsK8hnpTlBu+mHKz05hLMyhgvxs/rtCBTmXVeQzneyAIAqKrEHB5epTcEwSI2OoaVVPFuRmptGBOe/wcK9QQHAoJQ58kMLiKnnyET7t65pFQEezDNl8Qc4lXg3PU14RkhZkXzBvEhBCwbGNKLRCWwoMiTGv56GS81uX09mNi5XewipUpcSbximcsoe692k3fgS0ON35OamUm5pMOSnbFeQ0bhZIIXHNKTS+EyNEmHEVD+Ri9dv3/ST+gTCZwBDf6jrlzwNd+7wLPwK6OOVYHfMyjlDOhQ18PWbcOiiCwqv0puDo+sblHsg9u2kJnd+yTOkJcsI6Qx6l0OgKHujZt134uWAX5xu62eCo2hRRcyiFVx/ETElF+x6Ygck6sZCyTi1hmjLXvtwDOXENOyi6YnRVkJdL5zb95oFefd+FHwGLMefB5RIpInEEb7lduRf7qcy9tJMyj85hrjqjGE8xbhoSGUNR1eqphZcPbKUrl86q91dLwn7WrpaRl5JxYkUMrdiWImoP59XQfgvMzzpFGUdns6gn3eMjjqnTQuqzgI0X1kj3V0fSj4Ae+k5B4ZUUJAyKSrTrsSD7YuFKmJdlV1acjKgaDbi5zVwL8sH83JzidOnztn4E9OCUBwSGMF04kEUyzex6VZDw+AIqKBJu21VwIwPWMWEVKkgID6dw+z1X+szXHCnfY0sGOKW2LgYjg3X0G6ecKYtVgoIqLHa6QHyN2gJ/mDfB/wqczn+Hz7y0LtuogZNbT4V+nbBHB4jO5tN3lkTggCKEER35jAS7bu21le1uwcCWdkGQX9WYsNL/XbenN0Qwe0bwUmOZ12vUaIim9SXN2vTmGBqj7YQCusB74BycPYygAY1EmKjvhyxQW4D4fNl9hRszcGF9IBor3gH/Ni9Cf8PC+4DarLWXvQAAAAASUVORK5CYII="
+      alt="Work Healthy Australia" />
+    <a class="nav-cta" href="https://www.workhealthyaus.com.au/contact" target="_blank" rel="noopener">
+      Talk to WHA
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</header>
+
+<!-- ── Hero ────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--wha-gold);display:inline-block;"></span>
+      Workers' Compensation · RTW Cost Analysis
+    </div>
+    <h1>What does an injury really cost<br/>your <em>payroll</em>?</h1>
+    <p class="hero-lead">
+      The claim lodgement is just the visible tip. The real cost sits in the pay run — lost productive capacity, modified-duty inefficiency, replacement labour premium, overtime loading, and internal coordination time. This tool quantifies it.
+    </p>
+    <div class="hero-chips">
+      <span class="hero-chip"><span class="dot"></span>For payroll &amp; finance teams</span>
+      <span class="hero-chip"><span class="dot"></span>RTW coordinators</span>
+      <span class="hero-chip"><span class="dot"></span>HR &amp; safety managers</span>
+      <span class="hero-chip"><span class="dot"></span>Per-claim analysis</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── ROI banner ───────────────────────────────────────────────────── -->
+<div class="roi-banner">
+  <div class="roi-banner-inner">
+    <div class="roi-stat">
+      <span class="roi-stat-num">Up to 80%</span>
+      <span class="roi-stat-text">reduction in productivity<br/>drain with WHA programs</span>
+    </div>
+    <div class="roi-divider"></div>
+    <div class="roi-stat">
+      <span class="roi-stat-num">Up to 14:1</span>
+      <span class="roi-stat-text">return on investment<br/>delivered by WHA</span>
+    </div>
+    <div class="roi-divider"></div>
+    <div class="roi-stat">
+      <span class="roi-stat-num">Faster RTW</span>
+      <span class="roi-stat-text">evidence-based clinical<br/>programs, AHPRA-registered</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main ─────────────────────────────────────────────────────────── -->
+<main class="main-wrap">
+  <div class="calc-layout">
+
+    <!-- ── LEFT: Input panels ────────────────────────────────────────── -->
+    <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+      <!-- Panel 1: Worker & Pay Run -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon card-icon-blue">👤</div>
+          <div class="card-head-text">
+            <div class="card-head-title">Worker &amp; Pay Run</div>
+            <div class="card-head-sub">Base parameters for the affected worker</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label for="f-rate">Ordinary Hourly Rate</label>
+              <div class="input-wrap">
+                <span class="input-prefix">$</span>
+                <input type="number" id="f-rate" value="38.00" min="0" step="0.50" oninput="recalc()" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-normal-hrs">Normal Hours This Pay Run</label>
+              <div class="input-wrap suffix-only">
+                <input type="number" id="f-normal-hrs" value="76" min="0" step="1" oninput="recalc()" class="input-no-affix" />
+                <span class="input-suffix">hrs</span>
+              </div>
+            </div>
+            <div class="field field-full">
+              <label for="f-pay-freq">Pay Run Frequency</label>
+              <div class="input-wrap">
+                <select id="f-pay-freq" onchange="recalc()" class="input-no-affix">
+                  <option value="52">Weekly (52/year)</option>
+                  <option value="26" selected>Fortnightly (26/year)</option>
+                  <option value="24">Semi-monthly (24/year)</option>
+                  <option value="12">Monthly (12/year)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 2: Absence -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:rgba(181,64,46,0.1);">🏥</div>
+          <div class="card-head-text">
+            <div class="card-head-title">Absence</div>
+            <div class="card-head-sub">Hours the worker was completely absent this pay run</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label for="f-absent-hrs">Hours Absent</label>
+              <div class="input-wrap suffix-only">
+                <input type="number" id="f-absent-hrs" value="40" min="0" step="1" oninput="recalc()" class="input-no-affix" />
+                <span class="input-suffix">hrs</span>
+              </div>
+            </div>
+            <div class="field" style="align-self:end;padding-bottom:0.125rem;">
+              <span style="font-size:0.75rem;color:var(--wha-ink-soft);line-height:1.5;">
+                Lost capacity cost = absent hours × ordinary rate
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 3: Modified Duties -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:rgba(168,130,154,0.12);">🔧</div>
+          <div class="card-head-text">
+            <div class="card-head-title">Modified Duties</div>
+            <div class="card-head-sub">Hours worked at reduced capacity during this pay run</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label for="f-mod-hrs">Modified Duty Hours</label>
+              <div class="input-wrap suffix-only">
+                <input type="number" id="f-mod-hrs" value="36" min="0" step="1" oninput="recalc()" class="input-no-affix" />
+                <span class="input-suffix">hrs</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-mod-pct">Productivity While on Duties</label>
+              <div class="input-wrap suffix-only">
+                <input type="number" id="f-mod-pct" value="60" min="0" max="100" step="5" oninput="recalc()" class="input-no-affix" />
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:0.75rem;color:var(--wha-ink-soft);margin-top:0.75rem;">
+            Lost productivity = modified hours × (1 − productivity%) × ordinary rate. The productive portion is not counted as a drain.
+          </p>
+        </div>
+      </div>
+
+      <!-- Panel 4: Replacement Labour -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:rgba(148,136,180,0.12);">🔄</div>
+          <div class="card-head-text">
+            <div class="card-head-title">Replacement Labour</div>
+            <div class="card-head-sub">Only the premium above the injured worker's rate counts</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label for="f-rep-hrs">Replacement Labour Hours</label>
+              <div class="input-wrap suffix-only">
+                <input type="number" id="f-rep-hrs" value="40" min="0" step="1" oninput="recalc()" class="input-no-affix" />
+                <span class="input-suffix">hrs</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-rep-rate">Replacement Hourly Rate</label>
+              <div class="input-wrap">
+                <span class="input-prefix">$</span>
+                <input type="number" id="f-rep-rate" value="45.00" min="0" step="0.50" oninput="recalc()" />
+              </div>
+            </div>
+          </div>
+          <p style="font-size:0.75rem;color:var(--wha-ink-soft);margin-top:0.75rem;">
+            If replacement labour is cheaper than the injured worker's rate the premium is negative (a saving).
+          </p>
+        </div>
+      </div>
+
+      <!-- Panel 5: Overtime -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon" style="background:rgba(176,112,48,0.1);">⏱</div>
+          <div class="card-head-text">
+            <div class="card-head-title">Overtime</div>
+            <div class="card-head-sub">Only the loading above ordinary time counts as a drain</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="field-grid field-grid-3">
+            <div class="field">
+              <label for="f-ot-hrs">Overtime Hours</label>
+              <div class="input-wrap suffix-only">
+                <input type="number" id="f-ot-hrs" value="8" min="0" step="1" oninput="recalc()" class="input-no-affix" />
+                <span class="input-suffix">hrs</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-ot-rate">Overtime Worker Rate</label>
+              <div class="input-wrap">
+                <span class="input-prefix">$</span>
+                <input type="number" id="f-ot-rate" value="38.00" min="0" step="0.50" oninput="recalc()" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-ot-mult">OT Multiplier</label>
+              <div class="input-wrap">
+                <select id="f-ot-mult" onchange="recalc()" class="input-no-affix">
+                  <option value="1.25">1.25×</option>
+                  <option value="1.5" selected>1.5×</option>
+                  <option value="1.75">1.75×</option>
+                  <option value="2.0">2.0×</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:0.75rem;color:var(--wha-ink-soft);margin-top:0.75rem;">
+            OT premium = overtime hours × worker rate × (multiplier − 1). E.g. 8 hrs at $38 at 1.5× = 8 × $38 × 0.5 = $152.
+          </p>
+        </div>
+      </div>
+
+      <!-- Panel 6: Coordination (optional) -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon card-icon-green">📋</div>
+          <div class="card-head-text">
+            <div class="card-head-title">Internal Coordination</div>
+            <div class="card-head-sub">Admin, supervisor, HR, RTW &amp; safety time</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="coord-row" style="margin-bottom:0.5rem;">
+            <span class="coord-row-label" style="font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--wha-purple);padding-bottom:0;">Role</span>
+            <span class="coord-row-label" style="text-align:right;">Hrs</span>
+            <span class="coord-row-label" style="text-align:right;">$/hr</span>
+          </div>
+          <div class="coord-row">
+            <span class="coord-row-label">Payroll Admin</span>
+            <div class="input-wrap suffix-only" style="width:80px;">
+              <input type="number" id="f-c1-hrs" value="1" min="0" step="0.5" oninput="recalc()" class="input-no-affix" style="padding:0.5rem;text-align:right;font-size:0.875rem;" />
+              <span class="input-suffix" style="padding:0.5rem 0.5rem;">h</span>
+            </div>
+            <div class="input-wrap" style="width:96px;">
+              <span class="input-prefix" style="padding:0.5rem 0.5rem;">$</span>
+              <input type="number" id="f-c1-rate" value="35" min="0" step="1" oninput="recalc()" style="padding:0.5rem;font-size:0.875rem;text-align:right;" />
+            </div>
+          </div>
+          <div class="coord-row">
+            <span class="coord-row-label">Supervisor</span>
+            <div class="input-wrap suffix-only" style="width:80px;">
+              <input type="number" id="f-c2-hrs" value="2" min="0" step="0.5" oninput="recalc()" class="input-no-affix" style="padding:0.5rem;text-align:right;font-size:0.875rem;" />
+              <span class="input-suffix" style="padding:0.5rem 0.5rem;">h</span>
+            </div>
+            <div class="input-wrap" style="width:96px;">
+              <span class="input-prefix" style="padding:0.5rem 0.5rem;">$</span>
+              <input type="number" id="f-c2-rate" value="48" min="0" step="1" oninput="recalc()" style="padding:0.5rem;font-size:0.875rem;text-align:right;" />
+            </div>
+          </div>
+          <div class="coord-row">
+            <span class="coord-row-label">HR / RTW / Safety</span>
+            <div class="input-wrap suffix-only" style="width:80px;">
+              <input type="number" id="f-c3-hrs" value="3" min="0" step="0.5" oninput="recalc()" class="input-no-affix" style="padding:0.5rem;text-align:right;font-size:0.875rem;" />
+              <span class="input-suffix" style="padding:0.5rem 0.5rem;">h</span>
+            </div>
+            <div class="input-wrap" style="width:96px;">
+              <span class="input-prefix" style="padding:0.5rem 0.5rem;">$</span>
+              <input type="number" id="f-c3-rate" value="55" min="0" step="1" oninput="recalc()" style="padding:0.5rem;font-size:0.875rem;text-align:right;" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /LEFT -->
+
+    <!-- ── RIGHT: Results ────────────────────────────────────────────── -->
+    <div class="card card-sticky" style="overflow:hidden;padding:0;">
+
+      <!-- Total -->
+      <div class="result-hero">
+        <p class="result-hero-eyebrow">Total Productivity Drain This Pay Run</p>
+        <div class="result-hero-num" id="r-total">$0</div>
+        <p class="result-hero-sub" id="r-normal-val">Normal pay-run labour value: $0</p>
+        <div class="result-hero-runrate">
+          <span class="result-hero-runrate-label">Annualised run-rate</span>
+          <span class="result-hero-runrate-num" id="r-runrate">$0/yr</span>
+        </div>
+      </div>
+
+      <!-- Breakdown -->
+      <div class="breakdown-section">
+        <p class="breakdown-title">Cost Breakdown</p>
+
+        <div class="breakdown-row">
+          <div class="breakdown-left">
+            <div class="brow-pip" style="background:var(--wha-gold);align-self:stretch;"></div>
+            <div>
+              <div class="brow-name">Lost Capacity (Absence)</div>
+              <div class="brow-formula" id="f-absent-formula">0 hrs × $0/hr</div>
+              <div class="bar-wrap" style="width:160px;max-width:100%;"><div class="bar-fill" id="bar-absent" style="background:var(--wha-gold);width:0%"></div></div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="brow-amount" id="r-absent">$0</div>
+            <div style="font-size:0.75rem;color:var(--wha-purple);" id="r-absent-pct">—</div>
+          </div>
+        </div>
+
+        <div class="breakdown-row">
+          <div class="breakdown-left">
+            <div class="brow-pip" style="background:var(--wha-mauve);align-self:stretch;"></div>
+            <div>
+              <div class="brow-name">Lost Modified-Duty Productivity</div>
+              <div class="brow-formula" id="f-mod-formula">0 hrs × 40% × $0/hr</div>
+              <div class="bar-wrap" style="width:160px;max-width:100%;"><div class="bar-fill" id="bar-mod" style="background:var(--wha-mauve);width:0%"></div></div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="brow-amount" id="r-mod">$0</div>
+            <div style="font-size:0.75rem;color:var(--wha-purple);" id="r-mod-pct">—</div>
+          </div>
+        </div>
+
+        <div class="breakdown-row">
+          <div class="breakdown-left">
+            <div class="brow-pip" style="background:var(--wha-lavender);align-self:stretch;"></div>
+            <div>
+              <div class="brow-name">Replacement Labour Premium</div>
+              <div class="brow-formula" id="f-rep-formula">0 hrs × ($0 − $0)</div>
+              <div class="bar-wrap" style="width:160px;max-width:100%;"><div class="bar-fill" id="bar-rep" style="background:var(--wha-lavender);width:0%"></div></div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="brow-amount" id="r-rep">$0</div>
+            <div style="font-size:0.75rem;color:var(--wha-purple);" id="r-rep-pct">—</div>
+          </div>
+        </div>
+
+        <div class="breakdown-row">
+          <div class="breakdown-left">
+            <div class="brow-pip" style="background:var(--warning);align-self:stretch;"></div>
+            <div>
+              <div class="brow-name">Overtime Premium</div>
+              <div class="brow-formula" id="f-ot-formula">0 hrs × $0 × 0.5</div>
+              <div class="bar-wrap" style="width:160px;max-width:100%;"><div class="bar-fill" id="bar-ot" style="background:var(--warning);width:0%"></div></div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="brow-amount" id="r-ot">$0</div>
+            <div style="font-size:0.75rem;color:var(--wha-purple);" id="r-ot-pct">—</div>
+          </div>
+        </div>
+
+        <div class="breakdown-row">
+          <div class="breakdown-left">
+            <div class="brow-pip" style="background:var(--primary);align-self:stretch;"></div>
+            <div>
+              <div class="brow-name">Internal Coordination Cost</div>
+              <div class="brow-formula" id="f-coord-formula">Admin + Supervisor + HR/RTW</div>
+              <div class="bar-wrap" style="width:160px;max-width:100%;"><div class="bar-fill" id="bar-coord" style="background:var(--primary);width:0%"></div></div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div class="brow-amount" id="r-coord">$0</div>
+            <div style="font-size:0.75rem;color:var(--wha-purple);" id="r-coord-pct">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHA Impact -->
+      <div class="wha-block">
+        <div class="wha-block-head">
+          <span class="wha-block-label">With Work Healthy Australia</span>
+          <span class="wha-badge">Up to 80% reduction</span>
+        </div>
+        <div class="wha-row">
+          <span class="wha-row-label">Pay-run savings (80% recovery)</span>
+          <span class="wha-row-value" id="r-savings">$0</span>
+        </div>
+        <div class="wha-row">
+          <span class="wha-row-label">Annual run-rate savings</span>
+          <span class="wha-row-value" id="r-annual-savings">$0/yr</span>
+        </div>
+        <div class="wha-row">
+          <span class="wha-row-label">Residual drain (retained 20%)</span>
+          <span class="wha-row-value" id="r-retained">$0</span>
+        </div>
+      </div>
+
+      <!-- ROI chips -->
+      <div class="roi-chips">
+        <div class="roi-chip">
+          <span class="roi-chip-num roi-chip-num-gold">14:1</span>
+          <span class="roi-chip-label">Maximum ROI<br/>delivered by WHA</span>
+        </div>
+        <div class="roi-chip">
+          <span class="roi-chip-num" style="color:var(--success);" id="r-drain-pct-normal">0%</span>
+          <span class="roi-chip-label">Drain as % of normal<br/>pay-run labour cost</span>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-block">
+        <h3>Get your personalised RTW ROI analysis</h3>
+        <p>Our clinical team will model your full program cost and projected outcomes — no obligation, free of charge.</p>
+        <a class="cta-btn" href="https://www.workhealthyaus.com.au/contact" target="_blank" rel="noopener">
+          Request Free Analysis
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <p class="cta-note">No obligation · Response within 1 business day</p>
+      </div>
+
+    </div><!-- /RIGHT -->
+  </div>
+
+  <!-- ── Methodology cards ──────────────────────────────────────────── -->
+  <div class="method-section">
+    <div class="method-head">
+      <h2>How each cost component is calculated</h2>
+      <p>The calculator isolates the economic cost that sits around a claim — not the claim itself — using six distinct cost drivers.</p>
+    </div>
+    <div class="method-grid">
+      <div class="method-card">
+        <div class="method-pip" style="background:var(--wha-gold);"></div>
+        <h4>Lost Capacity (Absence)</h4>
+        <p>The full productive value of time the worker was completely absent — even if covered by workers' comp, this capacity was gone from your operation.</p>
+        <div class="method-formula">absent_hrs × ordinary_rate</div>
+      </div>
+      <div class="method-card">
+        <div class="method-pip" style="background:var(--wha-mauve);"></div>
+        <h4>Modified-Duty Productivity Loss</h4>
+        <p>Only the lost portion counts. A worker on 60% productivity delivers 40% lost value on modified duties. The 60% productive portion is not a drain.</p>
+        <div class="method-formula">mod_hrs × (1 − prod%) × ordinary_rate</div>
+      </div>
+      <div class="method-card">
+        <div class="method-pip" style="background:var(--wha-lavender);"></div>
+        <h4>Replacement Labour Premium</h4>
+        <p>Only the difference between replacement cost and the injured worker's ordinary rate. If replacement is cheaper, this shows as a negative (saving).</p>
+        <div class="method-formula">rep_hrs × (rep_rate − ordinary_rate)</div>
+      </div>
+      <div class="method-card">
+        <div class="method-pip" style="background:var(--warning);"></div>
+        <h4>Overtime Premium</h4>
+        <p>Only the loading above ordinary time. 20 hours at $45 at 1.5× carries a $450 premium — the ordinary-time portion is normal labour cost, not a drain.</p>
+        <div class="method-formula">ot_hrs × ot_rate × (multiplier − 1)</div>
+      </div>
+      <div class="method-card">
+        <div class="method-pip" style="background:var(--primary);"></div>
+        <h4>Internal Coordination</h4>
+        <p>Payroll admin processing the claim, supervisors adjusting duties, and HR/RTW/safety staff managing the case. Often invisible but consistently significant.</p>
+        <div class="method-formula">Σ (role_hrs × role_rate)</div>
+      </div>
+      <div class="method-card">
+        <div class="method-pip" style="background:var(--success);"></div>
+        <h4>Annualised Run-Rate</h4>
+        <p>Not a prediction — a run-rate indicator. It scales the current pay-run drain by the number of pay periods per year. Useful for budgeting and business case modelling.</p>
+        <div class="method-formula">pay_run_drain × pay_runs_per_year</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>Important:</strong> This calculator estimates the indirect productivity costs surrounding a workers' compensation claim. It does not calculate statutory compensation entitlements, insurance premiums, or legal costs. Replacement labour premium can be negative where replacement workers are paid less than the injured worker. Results are indicative only and depend on values entered. WHA savings and ROI figures are based on published program outcomes across the WHA client portfolio; actual results depend on industry, claim complexity, workforce size, and program design. Always verify calculations with your payroll system and financial advisors.
+  </div>
+
+</main>
+
+<!-- ── Footer ───────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <img class="footer-logo"
+      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABxCAYAAABSrainAAABJ2lDQ1BrQ0dDb2xvclNwYWNlQWRvYmVSR0IxOTk4AAAokWNgYFJILCjIYRJgYMjNKykKcndSiIiMUmB/ysDBIMHAx2DGYJSYXFzgGBDgwwAEMBoVfLvGwAiiL+uCzMKUxwu4UlKLk4H0HyDOTi4oKmFgYMwAspXLSwpA7B4gWyQpG8xeAGIXAR0IZG8BsdMh7BNgNRD2HbCakCBnIPsDkM2XBGYzgeziS4ewBUBsqL0gIOiYkp+UqgDyvYahpaWFJol+IAhKUitKQLRzfkFlUWZ6RomCIzCkUhU885L1dBSMDIwMGRhA4Q5R/TkQHJ6MYmcQYgiAEJsjwcDgv5SBgeUPQsykl4FhgQ4DA/9UhJga0HQBfQaGfXOSS4vKoMYwMhkzMBDiAwCR6UqOzYaB1AAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAoKADAAQAAAABAAAAcQAAAAAwsW1aAAAll0lEQVR4Ae1dB5wURdZ/mxMbgAWWvIQl55yDJAMCgoqCeBgAwynG8/jM6Hl6YjyMiKgYOBAERERBAQFBcg5LzhkWNrLxe//erZ7qnu6ZntmZ2WWZ9/vtdnWlrq5+U/VyBRQwkB9K3QwU5OcRBQRSQEBAqRubJwcU6MnO/H15cAYY+S7uWk2pR3Z5sNPS11WAfwUsfR9FHtGpNT9SXlY6Vel0MwWHR8lFZSLtXwFL+WdMYMQLCAqmQ/MnU8bpw6V8tK4Pz4+Ars+Zz1skdB5MwRHRdGTRVLq0b5PPn+/NB/oR0Juz66G+A4NDqHrvERQUGk4nV86mCzv+9FDPJd+NHwFL/htYGkFIuTiq2m2YUvfMuoV0cfdfltqV9kp+JoS/UH5uBuVnHqe8K+co/8pFKshNp4K8TOJ/yvcLCApliUgEBYTGUGBouQoKT6DA8CqcF+zz73tixfd0ef9mfm4AVe8zkqJrNvL5GDz5wGsWAQsK8hnpTlBu+mHKz05hLMyhgvxs/rtCBTmXVeQzneyAIAqKrEHB5epTcEwSI2OoaVVPFuRmptGBOe/wcK9QQHAoJQ58kMLiKnnyET7t65pFQEezDNl8Qc4lXg3PU14RkhZkXzBvEhBCwbGNKLRCWwoMiTGv56GS81uX09mNi5XewipUpcSbximcsoe692k3fgS0ON35OamUm5pMOSnbFeQ0bhZIIXHNKTS+EyNEmHEVD+Ri9dv3/ST+gTCZwBDf6jrlzwNd+7wLPwK6OOVYHfMyjlDOhQ18PWbcOiiCwqv0puDo+sblHsg9u2kJnd+yTOkJcsI6Qx6l0OgKHujZt134uWAX5xu62eCo2hRRcyiFVx/ETElF+x6Ygck6sZCyTi1hmjLXvtwDOXENOyi6YnRVkJdL5zb95oFefd+FHwGLMefB5RIpInEEb7lduRf7qcy9tJMyj85hrjqjGE8xbhoSGUNR1eqphZcPbKUrl86q91dLwn7WrpaRl5JxYkUMrdiWImoP59XQfgvMzzpFGUdns6gn3eMjjqnTQuqzgI0X1kj3V0fSj4Ae+k5B4ZUUJAyKSrTrsSD7YuFKmJdlV1acjKgaDbi5zVwL8sH83JzidOnztn4E9OCUBwSGMF04kEUyzex6VZDw+AIqKBJu21VwIwPWMWEVKkgID6dw+z1X+szXHCnfY0sGOKW2LgYjg3X0G6ecKYtVgoIqLHa6QHyN2gJ/mDfB/wqczn+Hz7y0LtuogZNbT4V+nbBHB4jO5tN3lkTggCKEER35jAS7bu21le1uwcCWdkGQX9WYsNL/XbenN0Qwe0bwUmOZ12vUaIim9SXN2vTmGBqj7YQCusB74BycPYygAY1EmKjvhyxQW4D4fNl9hRszcGF9IBor3gH/Ni9Cf8PC+4DarLWXvQAAAAASUVORK5CYII="
+      alt="Work Healthy Australia" />
+    <div class="footer-links">
+      <a href="https://www.workhealthyaus.com.au" target="_blank" rel="noopener">workhealthyaus.com.au</a>
+      <a href="https://www.workhealthyaus.com.au/contact" target="_blank" rel="noopener">Contact</a>
+      <a href="https://www.workhealthyaus.com.au/services" target="_blank" rel="noopener">Services</a>
+      <a href="https://www.workhealthyaus.com.au/privacy" target="_blank" rel="noopener">Privacy</a>
+    </div>
+    <p style="margin-top:0.375rem;">© 2026 Work Healthy Australia · rehabROI.com</p>
+  </div>
+</footer>
+
+<script>
+  // ── Helpers ────────────────────────────────────────────────────────────
+  const $ = id => document.getElementById(id);
+  const num = id => Math.max(0, parseFloat($(id).value) || 0);
+
+  function fmt(v, decimals = 0) {
+    const abs = Math.abs(v);
+    const sign = v < 0 ? '−$' : '$';
+    if (abs >= 1_000_000) return sign + (abs / 1_000_000).toFixed(2) + 'M';
+    if (abs >= 1_000)     return sign + abs.toLocaleString('en-AU', { maximumFractionDigits: decimals });
+    return sign + abs.toFixed(decimals);
+  }
+
+  function pct(part, total) {
+    if (!total || !isFinite(total)) return '—';
+    return (Math.abs(part) / total * 100).toFixed(1) + '%';
+  }
+
+  function setTxt(id, val) { const e = $(id); if (e) e.textContent = val; }
+  function setWidth(id, w) { const e = $(id); if (e) e.style.width = Math.min(100, Math.max(0, w)).toFixed(1) + '%'; }
+
+  // ── Core calculation ───────────────────────────────────────────────────
+  function recalc() {
+    // Inputs
+    const ordRate    = num('f-rate');
+    const normalHrs  = num('f-normal-hrs');
+    const payFreq    = parseInt($('f-pay-freq').value) || 26;
+    const absentHrs  = num('f-absent-hrs');
+    const modHrs     = num('f-mod-hrs');
+    const modPct     = Math.min(100, num('f-mod-pct'));
+    const repHrs     = num('f-rep-hrs');
+    const repRate    = num('f-rep-rate');
+    const otHrs      = num('f-ot-hrs');
+    const otRate     = num('f-ot-rate');
+    const otMult     = parseFloat($('f-ot-mult').value) || 1.5;
+    const c1hrs      = num('f-c1-hrs'), c1rate = num('f-c1-rate');
+    const c2hrs      = num('f-c2-hrs'), c2rate = num('f-c2-rate');
+    const c3hrs      = num('f-c3-hrs'), c3rate = num('f-c3-rate');
+
+    // Derived
+    const normalVal     = normalHrs * ordRate;
+    const absentCost    = absentHrs * ordRate;
+    const lostModPct    = (100 - modPct) / 100;
+    const modCost       = modHrs * lostModPct * ordRate;
+    const repPremium    = repHrs * (repRate - ordRate);  // can be negative
+    const otPremium     = otHrs * otRate * (otMult - 1);
+    const coordCost     = (c1hrs * c1rate) + (c2hrs * c2rate) + (c3hrs * c3rate);
+    const total         = absentCost + modCost + repPremium + otPremium + coordCost;
+    const runRate       = total * payFreq;
+    const savings       = total * 0.80;
+    const annualSavings = runRate * 0.80;
+    const retained      = total * 0.20;
+    const drainPctNorm  = normalVal > 0 ? (total / normalVal * 100) : 0;
+
+    // Positive total for bar widths
+    const maxComponent  = Math.max(absentCost, modCost, Math.abs(repPremium), otPremium, coordCost, 1);
+
+    // ── Update results ─────────────────────────────────────────────────
+    setTxt('r-total',         fmt(total));
+    setTxt('r-normal-val',    'Normal pay-run labour value: ' + fmt(normalVal));
+    setTxt('r-runrate',       fmt(runRate) + '/yr');
+
+    // Absent
+    setTxt('r-absent',        fmt(absentCost));
+    setTxt('r-absent-pct',    pct(absentCost, total));
+    setTxt('f-absent-formula', absentHrs.toFixed(0) + ' hrs × ' + fmt(ordRate, 2) + '/hr');
+    setWidth('bar-absent',    absentCost / maxComponent * 100);
+
+    // Modified
+    setTxt('r-mod',           fmt(modCost));
+    setTxt('r-mod-pct',       pct(modCost, total));
+    setTxt('f-mod-formula',   modHrs.toFixed(0) + ' hrs × ' + lostModPct.toFixed(0)*100 / 100 * 100 + '% loss × ' + fmt(ordRate, 2) + '/hr');
+    $('f-mod-formula').textContent = modHrs.toFixed(0) + ' hrs × ' + (100 - modPct).toFixed(0) + '% lost × ' + fmt(ordRate, 2) + '/hr';
+    setWidth('bar-mod',       modCost / maxComponent * 100);
+
+    // Replacement
+    const repEl = $('r-rep');
+    if (repEl) {
+      repEl.textContent = (repPremium < 0 ? '−' : '') + fmt(Math.abs(repPremium));
+      repEl.className   = 'brow-amount' + (repPremium < 0 ? ' negative' : repPremium === 0 ? ' zero' : '');
+    }
+    setTxt('r-rep-pct', repPremium < 0 ? 'saving' : pct(repPremium, total));
+    $('f-rep-formula').textContent = repHrs.toFixed(0) + ' hrs × (' + fmt(repRate, 2) + ' − ' + fmt(ordRate, 2) + ')';
+    setWidth('bar-rep', Math.abs(repPremium) / maxComponent * 100);
+
+    // OT
+    setTxt('r-ot',            fmt(otPremium));
+    setTxt('r-ot-pct',        pct(otPremium, total));
+    $('f-ot-formula').textContent = otHrs.toFixed(0) + ' hrs × ' + fmt(otRate, 2) + ' × ' + (otMult - 1).toFixed(2);
+    setWidth('bar-ot',        otPremium / maxComponent * 100);
+
+    // Coordination
+    setTxt('r-coord',         fmt(coordCost));
+    setTxt('r-coord-pct',     pct(coordCost, total));
+    $('f-coord-formula').textContent = fmt(c1hrs * c1rate) + ' + ' + fmt(c2hrs * c2rate) + ' + ' + fmt(c3hrs * c3rate);
+    setWidth('bar-coord',     coordCost / maxComponent * 100);
+
+    // WHA savings
+    setTxt('r-savings',       fmt(savings));
+    setTxt('r-annual-savings', fmt(annualSavings) + '/yr');
+    setTxt('r-retained',      fmt(retained));
+
+    // Drain % of normal
+    setTxt('r-drain-pct-normal', drainPctNorm.toFixed(0) + '%');
+  }
+
+  // ── Init ───────────────────────────────────────────────────────────────
+  recalc();
+</script>
+
+</body>
+</html>
