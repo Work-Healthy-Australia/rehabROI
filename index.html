@@ -747,16 +747,22 @@ function calcWorker(body) {
   const otHrs     = gn(body, '.f-ot-hrs');
   const otRate    = gn(body, '.f-ot-rate');
   const otMult    = parseFloat(g(body,'.f-ot-mult').value) || 1.5;
+  const onCostPct = gn(body, '.f-oncost');
+  const onCost    = 1 + (onCostPct / 100);
   const c1h = gn(body,'.f-c1-hrs'), c1r = gn(body,'.f-c1-rate');
   const c2h = gn(body,'.f-c2-hrs'), c2r = gn(body,'.f-c2-rate');
   const c3h = gn(body,'.f-c3-hrs'), c3r = gn(body,'.f-c3-rate');
 
-  const normalVal  = normalHrs * ordRate;
-  const absent     = absentHrs * ordRate;
-  const mod        = modHrs * ((100 - modPct) / 100) * ordRate;
-  const rep        = repHrs * (repRate - ordRate);
-  const ot         = otHrs * otRate * (otMult - 1);
-  const coord      = (c1h*c1r) + (c2h*c2r) + (c3h*c3r);
+  const effOrd = ordRate * onCost;
+  const effRep = repRate * onCost;
+  const effOt  = otRate  * onCost;
+
+  const normalVal  = normalHrs * effOrd;
+  const absent     = absentHrs * effOrd;
+  const mod        = modHrs * ((100 - modPct) / 100) * effOrd;
+  const rep        = repHrs * (effRep - effOrd);
+  const ot         = otHrs * effOt * (otMult - 1);
+  const coord      = (c1h*c1r + c2h*c2r + c3h*c3r) * onCost;
   const total      = absent + mod + rep + ot + coord;
   const runRate    = total * payFreq;
 
@@ -805,6 +811,14 @@ function buildWorkerHTML(id, index) {
           <option value="24">Semi-monthly (24/year)</option>
           <option value="12">Monthly (12/year)</option>
         </select>
+      </div>
+      <div class="field field-full">
+        <label>On-Costs Loading</label>
+        <div class="input-wrap suffix-only">
+          <input type="number" class="f-oncost bare" value="20" min="0" max="100" step="1" oninput="recalc()" />
+          <span class="input-suffix">%</span>
+        </div>
+        <span style="font-size:0.75rem;color:var(--wha-ink-soft);margin-top:0.25rem;">Applied to all hourly rates — covers superannuation (12%), payroll tax, and workers comp levy. Default 20%.</span>
       </div>
     </div>
 
