@@ -4,16 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Payroll Productivity Drain Calculator | Work Healthy Australia</title>
-  <meta name="description" content="Calculate the hidden productivity drain sitting around a workers' compensation claim — absence, modified duties, replacement labour, overtime, and coordination time." />
+  <meta name="description" content="Calculate the hidden productivity drain across multiple workers' compensation claims — absence, modified duties, replacement labour, overtime, and coordination time." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap" rel="stylesheet" />
   <style>
-    /* ── Reset ─────────────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
-    /* ── Brand tokens ───────────────────────────────────────────────────── */
     :root {
       --wha-ink:        #2C2C3E;
       --wha-ink-soft:   #5A5A72;
@@ -27,7 +25,6 @@
       --success:        #1E7A50;
       --success-bg:     #E6F4EE;
       --warning:        #B07030;
-      --warning-bg:     #FBF0E0;
       --bg:             #F2F5F8;
       --surface:        #FFFFFF;
       --surface-warm:   #FAF9F7;
@@ -37,7 +34,6 @@
       --font-body:      "Inter", ui-sans-serif, system-ui, sans-serif;
     }
 
-    /* ── Base ───────────────────────────────────────────────────────────── */
     body {
       font-family: var(--font-body);
       font-size: 15px;
@@ -47,675 +43,374 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Header ─────────────────────────────────────────────────────────── */
+    /* ── Header ── */
     .site-header {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       padding: 0 clamp(1.25rem, 5vw, 4rem);
-      position: sticky;
-      top: 0;
-      z-index: 30;
+      position: sticky; top: 0; z-index: 40;
     }
     .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: 1240px;
-      margin: 0 auto;
-      height: 64px;
-      gap: 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 1280px; margin: 0 auto; height: 64px; gap: 1rem;
     }
     .logo-img { height: 40px; width: auto; display: block; }
     .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.55rem 1.25rem;
-      background: var(--primary);
-      color: #fff;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 600;
-      white-space: nowrap;
-      transition: background 120ms ease;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.55rem 1.25rem; background: var(--primary); color: #fff;
+      border-radius: 8px; text-decoration: none; font-size: 0.875rem;
+      font-weight: 600; white-space: nowrap; transition: background 120ms ease;
     }
     .nav-cta:hover { background: var(--primary-dark); }
 
-    /* ── Hero ───────────────────────────────────────────────────────────── */
+    /* ── Hero ── */
     .hero {
       background: linear-gradient(140deg, var(--wha-ink) 0%, #1A3350 55%, #1B6080 100%);
       color: #fff;
       padding: clamp(2.5rem, 7vw, 4.5rem) clamp(1.25rem, 5vw, 4rem);
     }
-    .hero-inner {
-      max-width: 860px;
-      margin: 0 auto;
-    }
+    .hero-inner { max-width: 860px; margin: 0 auto; }
     .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.6875rem;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--wha-gold);
-      margin-bottom: 1rem;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--wha-gold); margin-bottom: 1rem;
     }
     .hero h1 {
       font-family: var(--font-display);
       font-size: clamp(1.875rem, 5vw, 3rem);
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
+      font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 1rem;
     }
     .hero h1 em { font-style: normal; color: var(--wha-gold); }
     .hero-lead {
-      font-size: clamp(0.9375rem, 2vw, 1.125rem);
-      color: rgba(255,255,255,0.78);
-      max-width: 640px;
-      line-height: 1.65;
-      margin-bottom: 2rem;
+      font-size: clamp(0.9375rem, 2vw, 1.125rem); color: rgba(255,255,255,0.78);
+      max-width: 640px; line-height: 1.65; margin-bottom: 1.75rem;
     }
-    .hero-chips {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
+    .hero-chips { display: flex; gap: 0.75rem; flex-wrap: wrap; }
     .hero-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 100px;
-      padding: 0.35rem 0.875rem;
-      font-size: 0.8125rem;
-      color: rgba(255,255,255,0.85);
-      font-weight: 500;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 100px; padding: 0.35rem 0.875rem;
+      font-size: 0.8125rem; color: rgba(255,255,255,0.85); font-weight: 500;
     }
-    .hero-chip .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--wha-gold);
-      flex-shrink: 0;
-    }
+    .hero-chip .dot { width:6px;height:6px;border-radius:50%;background:var(--wha-gold);flex-shrink:0; }
 
-    /* ── ROI banner ─────────────────────────────────────────────────────── */
+    /* ── ROI banner ── */
     .roi-banner {
       background: linear-gradient(90deg, var(--wha-gold) 0%, #D9B840 100%);
       padding: 0.875rem clamp(1.25rem, 5vw, 4rem);
     }
     .roi-banner-inner {
-      max-width: 1240px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: clamp(1.5rem, 5vw, 4rem);
-      flex-wrap: wrap;
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center;
+      gap: clamp(1.5rem, 5vw, 4rem); flex-wrap: wrap;
     }
-    .roi-stat {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .roi-stat-num {
-      font-family: var(--font-display);
-      font-size: 1.625rem;
-      font-weight: 700;
-      color: var(--wha-ink);
-      line-height: 1;
-    }
-    .roi-stat-text {
-      font-size: 0.8125rem;
-      color: var(--wha-ink);
-      font-weight: 600;
-      line-height: 1.35;
-      opacity: 0.75;
-    }
-    .roi-divider {
-      width: 1px;
-      height: 32px;
-      background: rgba(44,44,62,0.2);
-    }
+    .roi-stat { display: flex; align-items: center; gap: 0.75rem; }
+    .roi-stat-num { font-family: var(--font-display); font-size: 1.625rem; font-weight: 700; color: var(--wha-ink); line-height: 1; }
+    .roi-stat-text { font-size: 0.8125rem; color: var(--wha-ink); font-weight: 600; line-height: 1.35; opacity: 0.75; }
+    .roi-divider { width: 1px; height: 32px; background: rgba(44,44,62,0.2); }
 
-    /* ── Main layout ────────────────────────────────────────────────────── */
+    /* ── Layout ── */
     .main-wrap {
-      max-width: 1240px;
-      margin: 0 auto;
+      max-width: 1280px; margin: 0 auto;
       padding: clamp(1.75rem, 4vw, 3rem) clamp(1.25rem, 5vw, 2rem);
     }
     .calc-layout {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
+      display: grid; grid-template-columns: 1fr; gap: 1.5rem;
     }
-    @media (min-width: 960px) {
-      .calc-layout {
-        grid-template-columns: minmax(0,1.1fr) minmax(0,0.9fr);
-        align-items: start;
-      }
+    @media (min-width: 1024px) {
+      .calc-layout { grid-template-columns: 1fr 380px; align-items: start; }
     }
 
-    /* ── Card ───────────────────────────────────────────────────────────── */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+    /* ── Summary strip ── */
+    .summary-strip {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.25rem 1.5rem;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem; margin-bottom: 1.25rem;
+      box-shadow: 0 2px 12px rgba(27,50,80,0.06);
+    }
+    .summary-stat { display: flex; flex-direction: column; gap: 0.2rem; }
+    .summary-stat-label { font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--wha-purple); }
+    .summary-stat-value { font-family: var(--font-display); font-size: 1.375rem; font-weight: 700; color: var(--wha-ink); font-variant-numeric: tabular-nums; line-height: 1.1; }
+    .summary-stat-value.green { color: var(--success); }
+    .summary-stat-sub { font-size: 0.75rem; color: var(--wha-ink-soft); }
+
+    /* ── Add worker bar ── */
+    .worker-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .worker-toolbar-title {
+      font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--wha-ink);
+    }
+    .worker-toolbar-sub { font-size: 0.8125rem; color: var(--wha-ink-soft); }
+    .btn-add-worker {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.625rem 1.125rem; background: var(--primary); color: #fff;
+      border: none; border-radius: 8px; font-family: var(--font-body);
+      font-size: 0.875rem; font-weight: 600; cursor: pointer;
+      transition: background 120ms ease;
+    }
+    .btn-add-worker:hover { background: var(--primary-dark); }
+
+    /* ── Worker card ── */
+    .worker-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 16px; margin-bottom: 1rem;
+      box-shadow: 0 2px 12px rgba(27,50,80,0.06);
       overflow: hidden;
-      box-shadow: 0 2px 16px rgba(27,50,80,0.07);
+      transition: border-color 200ms ease;
     }
-    .card-body { padding: clamp(1.25rem, 3vw, 1.75rem); }
-    .card-head {
-      padding: 1.125rem clamp(1.25rem, 3vw, 1.75rem);
-      background: var(--surface-warm);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .card-icon {
-      width: 34px; height: 34px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-    .card-icon-blue  { background: var(--primary-light); }
-    .card-icon-gold  { background: rgba(201,168,64,0.12); }
-    .card-icon-green { background: var(--success-bg); }
-    .card-head-text { flex: 1; }
-    .card-head-title {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--wha-ink);
-      line-height: 1.2;
-    }
-    .card-head-sub {
-      font-size: 0.8125rem;
-      color: var(--wha-ink-soft);
-      margin-top: 0.15rem;
-    }
-    .card-sticky { position: sticky; top: 76px; }
+    .worker-card.expanded { border-color: var(--primary); }
 
-    /* ── Section headers ────────────────────────────────────────────────── */
+    /* Card header (always visible) */
+    .worker-header {
+      display: flex; align-items: center; gap: 0.875rem;
+      padding: 1rem 1.25rem; cursor: pointer;
+      background: var(--surface-warm);
+      user-select: none;
+    }
+    .worker-header:hover { background: var(--primary-light); }
+    .worker-number {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--primary); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8125rem; font-weight: 700; flex-shrink: 0;
+    }
+    .worker-name-input {
+      flex: 1; border: none; background: transparent;
+      font-family: var(--font-body); font-size: 0.9375rem; font-weight: 600;
+      color: var(--wha-ink); outline: none; min-width: 0;
+    }
+    .worker-name-input::placeholder { color: var(--wha-purple); font-weight: 400; }
+    .worker-header-meta {
+      display: flex; align-items: center; gap: 1rem; flex-shrink: 0;
+    }
+    .worker-total-badge {
+      font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+      color: var(--wha-ink); font-variant-numeric: tabular-nums;
+    }
+    .worker-chevron {
+      color: var(--wha-purple); transition: transform 200ms ease; flex-shrink: 0;
+    }
+    .worker-card.expanded .worker-chevron { transform: rotate(180deg); }
+    .btn-remove {
+      background: none; border: none; cursor: pointer; padding: 0.25rem;
+      color: var(--wha-purple); opacity: 0.5; border-radius: 4px;
+      transition: opacity 120ms ease, color 120ms ease;
+      display: flex; align-items: center;
+    }
+    .btn-remove:hover { opacity: 1; color: #B5402E; }
+
+    /* Card body (collapsible) */
+    .worker-body { display: none; padding: 1.25rem; border-top: 1px solid var(--border); }
+    .worker-card.expanded .worker-body { display: block; }
+
+    /* ── Section divider ── */
     .section-divider {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin: 1.5rem 0 1rem;
+      display: flex; align-items: center; gap: 0.75rem; margin: 1.25rem 0 1rem;
     }
     .section-divider:first-child { margin-top: 0; }
-    .section-divider-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .section-divider-line {
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-    .section-label {
-      font-size: 0.6875rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
+    .section-pip { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .section-divider-line { flex: 1; height: 1px; background: var(--border); }
+    .section-label { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--wha-purple); white-space: nowrap; }
 
-    /* ── Field ──────────────────────────────────────────────────────────── */
-    .field-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    .field-grid-3 {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
+    /* ── Field layout ── */
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
+    .field-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
     .field-full { grid-column: 1 / -1; }
-    .field { display: flex; flex-direction: column; gap: 0.375rem; }
-    .field label {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--wha-ink);
-    }
-    .field-sub {
-      font-size: 0.75rem;
-      color: var(--wha-ink-soft);
-      font-weight: 400;
-      margin-top: 0.1rem;
-    }
-    .input-wrap {
-      display: flex;
-      align-items: center;
-    }
+    .field { display: flex; flex-direction: column; gap: 0.35rem; }
+    .field label { font-size: 0.8125rem; font-weight: 600; color: var(--wha-ink); }
+    .input-wrap { display: flex; align-items: center; }
     .input-prefix, .input-suffix {
-      padding: 0.5625rem 0.625rem;
-      background: var(--bg);
+      padding: 0.5rem 0.5625rem; background: var(--bg);
       border: 1.5px solid var(--border-strong);
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--wha-ink-soft);
-      line-height: 1;
-      flex-shrink: 0;
+      font-size: 0.8125rem; font-weight: 600; color: var(--wha-ink-soft); line-height: 1; flex-shrink: 0;
     }
     .input-prefix { border-right: none; border-radius: 8px 0 0 8px; }
     .input-suffix { border-left: none; border-radius: 0 8px 8px 0; }
     input[type="number"], select {
-      width: 100%;
-      padding: 0.5625rem 0.75rem;
-      border: 1.5px solid var(--border-strong);
-      border-radius: 8px;
-      font-family: var(--font-body);
-      font-size: 0.9375rem;
-      font-weight: 500;
-      color: var(--wha-ink);
-      background: var(--surface);
+      width: 100%; padding: 0.5rem 0.625rem;
+      border: 1.5px solid var(--border-strong); border-radius: 8px;
+      font-family: var(--font-body); font-size: 0.875rem; font-weight: 500;
+      color: var(--wha-ink); background: var(--surface);
       transition: border-color 120ms ease, box-shadow 120ms ease;
       -moz-appearance: textfield;
     }
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     input[type="number"]:focus, select:focus {
-      outline: none;
-      border-color: var(--primary);
+      outline: none; border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(27,96,128,0.12);
     }
-    .input-wrap input[type="number"],
-    .input-wrap select {
-      border-radius: 0 8px 8px 0;
-    }
-    .input-wrap.suffix-only input[type="number"] {
-      border-radius: 8px 0 0 8px;
-    }
-    .input-no-affix {
-      border-radius: 8px !important;
-    }
+    .input-wrap input[type="number"], .input-wrap select { border-radius: 0 8px 8px 0; }
+    .input-wrap.suffix-only input[type="number"] { border-radius: 8px 0 0 8px; }
+    .bare { border-radius: 8px !important; }
     select { cursor: pointer; }
 
-    /* Optional toggle */
-    .optional-toggle {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.625rem 0;
-      cursor: pointer;
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--primary);
-      user-select: none;
-      width: fit-content;
+    /* Coord rows */
+    .coord-grid {
+      display: grid; grid-template-columns: 1fr 72px 88px;
+      gap: 0.625rem; align-items: end; margin-bottom: 0.625rem;
     }
-    .toggle-icon {
-      font-size: 1rem;
-      transition: transform 160ms ease;
-    }
-    .optional-section { display: none; }
-    .optional-section.open { display: block; }
-    .toggle-icon.open { transform: rotate(45deg); }
+    .coord-grid-head { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--wha-purple); }
+    .coord-label { font-size: 0.8125rem; color: var(--wha-ink-soft); font-weight: 500; padding-bottom: 0.5625rem; }
 
-    /* Coord row */
-    .coord-row {
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 0.75rem;
-      align-items: end;
-      margin-bottom: 0.75rem;
+    /* Worker mini-result */
+    .worker-result {
+      margin-top: 1.25rem; padding: 1rem;
+      background: linear-gradient(135deg, var(--wha-ink) 0%, #1A3350 100%);
+      border-radius: 10px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
     }
-    .coord-row-label {
-      font-size: 0.8125rem;
-      color: var(--wha-ink-soft);
-      font-weight: 500;
-      padding-bottom: 0.625rem;
+    .worker-result-item { text-align: center; }
+    .worker-result-label { font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+    .worker-result-value { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+    .worker-result-value.gold { color: var(--wha-gold); }
+
+    /* ── RIGHT: Results panel ── */
+    .results-panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 2px 16px rgba(27,50,80,0.07);
+      position: sticky; top: 76px;
     }
 
-    /* ── Results panel ──────────────────────────────────────────────────── */
     .result-hero {
       background: linear-gradient(140deg, var(--wha-ink) 0%, #1A3350 100%);
-      padding: 1.5rem;
-      text-align: center;
+      padding: 1.5rem; text-align: center;
     }
     .result-hero-eyebrow {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 0.5rem;
+      font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.375rem;
     }
     .result-hero-num {
-      font-family: var(--font-display);
-      font-size: clamp(2.25rem, 5vw, 3rem);
-      font-weight: 700;
-      color: #fff;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: -0.02em;
+      font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700; color: #fff; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
     }
-    .result-hero-sub {
-      font-size: 0.8125rem;
-      color: rgba(255,255,255,0.5);
-      margin-top: 0.375rem;
-    }
+    .result-hero-sub { font-size: 0.75rem; color: rgba(255,255,255,0.45); margin-top: 0.3rem; }
     .result-hero-runrate {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 0.875rem;
-      background: rgba(201,168,64,0.15);
-      border: 1px solid rgba(201,168,64,0.25);
-      border-radius: 8px;
-      padding: 0.5rem 0.875rem;
+      display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem;
+      background: rgba(201,168,64,0.15); border: 1px solid rgba(201,168,64,0.25);
+      border-radius: 8px; padding: 0.45rem 0.875rem;
     }
-    .result-hero-runrate-label {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.6);
-      font-weight: 500;
-    }
-    .result-hero-runrate-num {
-      font-family: var(--font-display);
-      font-size: 1.125rem;
-      font-weight: 700;
-      color: var(--wha-gold);
-      font-variant-numeric: tabular-nums;
-    }
+    .rhr-label { font-size: 0.75rem; color: rgba(255,255,255,0.6); font-weight: 500; }
+    .rhr-num { font-family: var(--font-display); font-size: 1.0625rem; font-weight: 700; color: var(--wha-gold); font-variant-numeric: tabular-nums; }
 
-    /* Cost breakdown rows */
-    .breakdown-section { padding: 0 1.5rem 1rem; }
+    /* Per-worker list in results */
+    .worker-list-section { padding: 0 1.25rem 0.5rem; }
+    .worker-list-title {
+      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--wha-purple); padding: 1rem 0 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0;
+    }
+    .worker-list-row {
+      display: flex; align-items: center; gap: 0.75rem; justify-content: space-between;
+      padding: 0.625rem 0; border-bottom: 1px solid var(--border);
+    }
+    .worker-list-row:last-child { border-bottom: none; }
+    .worker-list-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .worker-list-name { flex: 1; font-size: 0.875rem; color: var(--wha-ink); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .worker-list-amt { font-size: 0.875rem; font-weight: 700; color: var(--wha-ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .worker-list-pct { font-size: 0.75rem; color: var(--wha-purple); text-align: right; }
+
+    /* Breakdown section */
+    .breakdown-section { padding: 0 1.25rem 0.5rem; }
     .breakdown-title {
-      font-size: 0.6875rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--wha-purple);
-      padding: 1rem 0 0.625rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 0;
+      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--wha-purple); padding: 1rem 0 0.5rem; border-bottom: 1px solid var(--border);
     }
     .breakdown-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 0.75rem;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 0.75rem; padding: 0.625rem 0; border-bottom: 1px solid var(--border);
     }
     .breakdown-row:last-child { border-bottom: none; }
-    .breakdown-left {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.625rem;
-      flex: 1;
-      min-width: 0;
-    }
-    .brow-pip {
-      width: 3px;
-      height: 100%;
-      min-height: 16px;
-      border-radius: 2px;
-      flex-shrink: 0;
-      margin-top: 3px;
-    }
-    .brow-name {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--wha-ink);
-      line-height: 1.3;
-    }
-    .brow-formula {
-      font-size: 0.75rem;
-      color: var(--wha-purple);
-      margin-top: 0.15rem;
-    }
-    .brow-amount {
-      font-size: 0.9375rem;
-      font-weight: 700;
-      color: var(--wha-ink);
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .brow-amount.negative { color: var(--success); }
-    .brow-amount.zero { color: var(--wha-purple); opacity: 0.5; }
-
-    /* Bar */
-    .bar-wrap { height: 3px; background: var(--border); border-radius: 100px; margin-top: 0.375rem; overflow: hidden; }
+    .brow-left { display: flex; align-items: flex-start; gap: 0.5rem; flex: 1; min-width: 0; }
+    .brow-pip { width: 3px; min-height: 16px; border-radius: 2px; flex-shrink: 0; margin-top: 3px; }
+    .brow-name { font-size: 0.8125rem; font-weight: 500; color: var(--wha-ink); }
+    .brow-amount { font-size: 0.875rem; font-weight: 700; color: var(--wha-ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .brow-amount.neg { color: var(--success); }
+    .brow-pct { font-size: 0.75rem; color: var(--wha-purple); text-align: right; }
+    .bar-wrap { height: 3px; background: var(--border); border-radius: 100px; margin-top: 0.3rem; width: 100%; overflow: hidden; }
     .bar-fill { height: 100%; border-radius: 100px; transition: width 300ms ease; }
 
-    /* WHA savings block */
+    /* WHA block */
     .wha-block {
-      margin: 0 1.5rem 1.5rem;
+      margin: 0.25rem 1.25rem 1rem;
       background: linear-gradient(135deg, var(--success-bg) 0%, #CDE8DA 100%);
-      border: 1.5px solid rgba(30,122,80,0.2);
-      border-radius: 12px;
-      padding: 1.25rem;
+      border: 1.5px solid rgba(30,122,80,0.2); border-radius: 12px; padding: 1.125rem;
     }
-    .wha-block-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .wha-block-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--success);
-    }
-    .wha-badge {
-      background: var(--success);
-      color: #fff;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.275rem 0.625rem;
-      border-radius: 100px;
-      white-space: nowrap;
-    }
-    .wha-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(30,122,80,0.12);
-    }
+    .wha-block-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem; }
+    .wha-block-label { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--success); }
+    .wha-badge { background: var(--success); color: #fff; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.6rem; border-radius: 100px; white-space: nowrap; }
+    .wha-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(30,122,80,0.12); }
     .wha-row:last-of-type { border-bottom: none; }
-    .wha-row-label { font-size: 0.875rem; color: var(--success); font-weight: 500; }
-    .wha-row-value { font-size: 0.9375rem; font-weight: 700; color: var(--success); font-variant-numeric: tabular-nums; }
+    .wha-row-label { font-size: 0.8125rem; color: var(--success); font-weight: 500; }
+    .wha-row-value { font-size: 0.875rem; font-weight: 700; color: var(--success); font-variant-numeric: tabular-nums; }
 
     /* ROI chips */
-    .roi-chips {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-      margin: 0 1.5rem 1.5rem;
-    }
-    .roi-chip {
-      background: var(--surface-warm);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1rem;
-      text-align: center;
-    }
-    .roi-chip-num {
-      font-family: var(--font-display);
-      font-size: 1.625rem;
-      font-weight: 700;
-      line-height: 1;
-      display: block;
-      font-variant-numeric: tabular-nums;
-    }
-    .roi-chip-num-gold {
-      color: var(--wha-ink);
-      background: var(--wha-gold);
-      border-radius: 6px;
-      padding: 0.25rem 0.5rem;
-      display: inline-block;
-    }
-    .roi-chip-label {
-      font-size: 0.75rem;
-      color: var(--wha-ink-soft);
-      margin-top: 0.4rem;
-      display: block;
-      line-height: 1.35;
-    }
+    .roi-chips { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 0 1.25rem 1rem; }
+    .roi-chip { background: var(--surface-warm); border: 1px solid var(--border); border-radius: 10px; padding: 0.875rem; text-align: center; }
+    .roi-chip-num { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; line-height: 1; display: block; font-variant-numeric: tabular-nums; }
+    .roi-chip-num-gold { color: var(--wha-ink); background: var(--wha-gold); border-radius: 6px; padding: 0.2rem 0.45rem; display: inline-block; }
+    .roi-chip-label { font-size: 0.6875rem; color: var(--wha-ink-soft); margin-top: 0.35rem; display: block; line-height: 1.4; }
 
     /* CTA */
     .cta-block {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      border-radius: 12px;
-      margin: 0 1.5rem 1.5rem;
-      padding: 1.5rem;
-      text-align: center;
+      border-radius: 12px; margin: 0 1.25rem 1.25rem; padding: 1.25rem; text-align: center;
     }
-    .cta-block h3 {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 0.375rem;
-    }
-    .cta-block p {
-      font-size: 0.8125rem;
-      color: rgba(255,255,255,0.72);
-      margin-bottom: 1rem;
-      line-height: 1.5;
-    }
+    .cta-block h3 { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; }
+    .cta-block p { font-size: 0.8125rem; color: rgba(255,255,255,0.7); margin-bottom: 0.875rem; line-height: 1.5; }
     .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.45rem;
-      width: 100%;
-      padding: 0.8125rem 1.5rem;
-      background: var(--wha-gold);
-      color: var(--wha-ink);
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.9375rem;
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      width: 100%; padding: 0.75rem 1.25rem; background: var(--wha-gold); color: var(--wha-ink);
+      border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.875rem;
       transition: background 120ms ease, transform 100ms ease;
     }
     .cta-btn:hover { background: #D9B840; transform: translateY(-1px); }
-    .cta-note {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.5);
-      margin-top: 0.625rem;
-    }
+    .cta-note { font-size: 0.6875rem; color: rgba(255,255,255,0.45); margin-top: 0.5rem; }
 
-    /* ── Methodology section ────────────────────────────────────────────── */
-    .method-section {
-      margin-top: 2.5rem;
-    }
-    .method-head {
-      margin-bottom: 1.25rem;
-    }
-    .method-head h2 {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--wha-ink);
-    }
-    .method-head p {
-      font-size: 0.9375rem;
-      color: var(--wha-ink-soft);
-      margin-top: 0.3rem;
-    }
-    .method-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-    }
-    .method-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.25rem;
-    }
-    .method-pip {
-      width: 32px;
-      height: 4px;
-      border-radius: 2px;
-      margin-bottom: 0.875rem;
-    }
-    .method-card h4 {
-      font-size: 0.9375rem;
-      font-weight: 700;
-      color: var(--wha-ink);
-      margin-bottom: 0.375rem;
-    }
-    .method-card p {
-      font-size: 0.8125rem;
-      color: var(--wha-ink-soft);
-      line-height: 1.6;
-    }
-    .method-formula {
-      margin-top: 0.625rem;
-      padding: 0.5rem 0.75rem;
-      background: var(--bg);
-      border-radius: 6px;
-      font-size: 0.75rem;
-      color: var(--wha-purple);
-      font-family: ui-monospace, Menlo, monospace;
-      line-height: 1.5;
-    }
+    /* ── Methodology ── */
+    .method-section { margin-top: 2.5rem; }
+    .method-head h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--wha-ink); }
+    .method-head p { font-size: 0.9375rem; color: var(--wha-ink-soft); margin-top: 0.3rem; margin-bottom: 1.25rem; }
+    .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+    .method-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.125rem; }
+    .method-pip { width: 28px; height: 4px; border-radius: 2px; margin-bottom: 0.75rem; }
+    .method-card h4 { font-size: 0.9375rem; font-weight: 700; color: var(--wha-ink); margin-bottom: 0.3rem; }
+    .method-card p { font-size: 0.8125rem; color: var(--wha-ink-soft); line-height: 1.6; }
+    .method-formula { margin-top: 0.5rem; padding: 0.4rem 0.625rem; background: var(--bg); border-radius: 6px; font-size: 0.7rem; color: var(--wha-purple); font-family: ui-monospace, monospace; }
 
-    /* ── Disclaimer ─────────────────────────────────────────────────────── */
-    .disclaimer {
-      margin-top: 1.5rem;
-      font-size: 0.75rem;
-      color: var(--wha-purple);
-      line-height: 1.6;
-      padding: 1rem 1.25rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-    }
+    .disclaimer { margin-top: 1.5rem; font-size: 0.75rem; color: var(--wha-purple); line-height: 1.6; padding: 1rem 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
 
-    /* ── Footer ─────────────────────────────────────────────────────────── */
-    footer {
-      background: var(--wha-ink);
-      color: rgba(255,255,255,0.55);
-      padding: 2rem clamp(1.25rem, 5vw, 4rem);
-      text-align: center;
-      font-size: 0.8125rem;
-      margin-top: 3rem;
-    }
+    /* ── Footer ── */
+    footer { background: var(--wha-ink); color: rgba(255,255,255,0.55); padding: 2rem clamp(1.25rem, 5vw, 4rem); text-align: center; font-size: 0.8125rem; margin-top: 3rem; }
     footer a { color: rgba(255,255,255,0.75); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
-    .footer-inner { max-width: 1240px; margin: 0 auto; }
-    .footer-logo {
-      height: 34px; width: auto;
-      display: block; margin: 0 auto 0.875rem;
-      filter: brightness(0) invert(1); opacity: 0.7;
-    }
-    .footer-links {
-      display: flex; justify-content: center; gap: 1.5rem;
-      flex-wrap: wrap; margin-bottom: 0.625rem;
+    .footer-inner { max-width: 1280px; margin: 0 auto; }
+    .footer-logo { height: 32px; width: auto; display: block; margin: 0 auto 0.875rem; filter: brightness(0) invert(1); opacity: 0.7; }
+    .footer-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .field-grid, .field-grid-3 { grid-template-columns: 1fr; }
+      .coord-grid { grid-template-columns: 1fr 68px; }
+      .coord-grid .coord-rate { display: none; }
     }
 
-    /* ── Responsive tweaks ──────────────────────────────────────────────── */
-    @media (max-width: 600px) {
-      .field-grid { grid-template-columns: 1fr; }
-      .field-grid-3 { grid-template-columns: 1fr; }
-      .coord-row { grid-template-columns: 1fr 1fr; }
-      .coord-row-label { display: none; }
-    }
+    /* Colour palette for worker dots */
+    .c0 { background: #1B6080; }
+    .c1 { background: #C9A840; }
+    .c2 { background: #A8829A; }
+    .c3 { background: #9488B4; }
+    .c4 { background: #1E7A50; }
+    .c5 { background: #B07030; }
+    .c6 { background: #5A6EA8; }
+    .c7 { background: #7A5C3A; }
   </style>
 </head>
 <body>
 
-<!-- ── Header ──────────────────────────────────────────────────────── -->
+<!-- Header -->
 <header class="site-header">
   <div class="nav-inner">
     <img class="logo-img"
@@ -728,27 +423,27 @@
   </div>
 </header>
 
-<!-- ── Hero ────────────────────────────────────────────────────────── -->
+<!-- Hero -->
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-eyebrow">
-      <span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--wha-gold);display:inline-block;"></span>
+      <span style="width:6px;height:6px;border-radius:50%;background:var(--wha-gold);display:inline-block;"></span>
       Workers' Compensation · RTW Cost Analysis
     </div>
-    <h1>What does an injury really cost<br/>your <em>payroll</em>?</h1>
+    <h1>What do your injuries really cost<br/>your <em>payroll</em>?</h1>
     <p class="hero-lead">
-      The claim lodgement is just the visible tip. The real cost sits in the pay run — lost productive capacity, modified-duty inefficiency, replacement labour premium, overtime loading, and internal coordination time. This tool quantifies it.
+      The claim is just the tip. The real cost sits in the pay run — lost capacity, modified-duty inefficiency, replacement labour, overtime loading, and coordination time. Add as many workers as you need.
     </p>
     <div class="hero-chips">
-      <span class="hero-chip"><span class="dot"></span>For payroll &amp; finance teams</span>
-      <span class="hero-chip"><span class="dot"></span>RTW coordinators</span>
-      <span class="hero-chip"><span class="dot"></span>HR &amp; safety managers</span>
-      <span class="hero-chip"><span class="dot"></span>Per-claim analysis</span>
+      <span class="hero-chip"><span class="dot"></span>Multiple workers per pay run</span>
+      <span class="hero-chip"><span class="dot"></span>Combined &amp; per-worker breakdown</span>
+      <span class="hero-chip"><span class="dot"></span>Annualised run-rate</span>
+      <span class="hero-chip"><span class="dot"></span>WHA ROI projection</span>
     </div>
   </div>
 </section>
 
-<!-- ── ROI banner ───────────────────────────────────────────────────── -->
+<!-- ROI banner -->
 <div class="roi-banner">
   <div class="roi-banner-inner">
     <div class="roi-stat">
@@ -763,347 +458,155 @@
     <div class="roi-divider"></div>
     <div class="roi-stat">
       <span class="roi-stat-num">Faster RTW</span>
-      <span class="roi-stat-text">evidence-based clinical<br/>programs, AHPRA-registered</span>
+      <span class="roi-stat-text">AHPRA-registered clinical<br/>team, evidence-based</span>
     </div>
   </div>
 </div>
 
-<!-- ── Main ─────────────────────────────────────────────────────────── -->
+<!-- Main -->
 <main class="main-wrap">
   <div class="calc-layout">
 
-    <!-- ── LEFT: Input panels ────────────────────────────────────────── -->
-    <div style="display:flex;flex-direction:column;gap:1.25rem;">
-
-      <!-- Panel 1: Worker & Pay Run -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon card-icon-blue">👤</div>
-          <div class="card-head-text">
-            <div class="card-head-title">Worker &amp; Pay Run</div>
-            <div class="card-head-sub">Base parameters for the affected worker</div>
-          </div>
+    <!-- LEFT: workers -->
+    <div>
+      <!-- Summary strip -->
+      <div class="summary-strip" id="summary-strip">
+        <div class="summary-stat">
+          <span class="summary-stat-label">Workers</span>
+          <span class="summary-stat-value" id="s-workers">1</span>
         </div>
-        <div class="card-body">
-          <div class="field-grid">
-            <div class="field">
-              <label for="f-rate">Ordinary Hourly Rate</label>
-              <div class="input-wrap">
-                <span class="input-prefix">$</span>
-                <input type="number" id="f-rate" value="38.00" min="0" step="0.50" oninput="recalc()" />
-              </div>
-            </div>
-            <div class="field">
-              <label for="f-normal-hrs">Normal Hours This Pay Run</label>
-              <div class="input-wrap suffix-only">
-                <input type="number" id="f-normal-hrs" value="76" min="0" step="1" oninput="recalc()" class="input-no-affix" />
-                <span class="input-suffix">hrs</span>
-              </div>
-            </div>
-            <div class="field field-full">
-              <label for="f-pay-freq">Pay Run Frequency</label>
-              <div class="input-wrap">
-                <select id="f-pay-freq" onchange="recalc()" class="input-no-affix">
-                  <option value="52">Weekly (52/year)</option>
-                  <option value="26" selected>Fortnightly (26/year)</option>
-                  <option value="24">Semi-monthly (24/year)</option>
-                  <option value="12">Monthly (12/year)</option>
-                </select>
-              </div>
-            </div>
-          </div>
+        <div class="summary-stat">
+          <span class="summary-stat-label">Total drain this pay run</span>
+          <span class="summary-stat-value" id="s-total">$0</span>
+        </div>
+        <div class="summary-stat">
+          <span class="summary-stat-label">Annualised run-rate</span>
+          <span class="summary-stat-value" id="s-runrate">$0/yr</span>
+        </div>
+        <div class="summary-stat">
+          <span class="summary-stat-label">WHA annual savings (80%)</span>
+          <span class="summary-stat-value green" id="s-savings">$0/yr</span>
         </div>
       </div>
 
-      <!-- Panel 2: Absence -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon" style="background:rgba(181,64,46,0.1);">🏥</div>
-          <div class="card-head-text">
-            <div class="card-head-title">Absence</div>
-            <div class="card-head-sub">Hours the worker was completely absent this pay run</div>
-          </div>
+      <!-- Toolbar -->
+      <div class="worker-toolbar">
+        <div>
+          <div class="worker-toolbar-title">Workers on Claim This Pay Run</div>
+          <div class="worker-toolbar-sub">Enter one card per injured worker. Click a card header to expand or collapse.</div>
         </div>
-        <div class="card-body">
-          <div class="field-grid">
-            <div class="field">
-              <label for="f-absent-hrs">Hours Absent</label>
-              <div class="input-wrap suffix-only">
-                <input type="number" id="f-absent-hrs" value="40" min="0" step="1" oninput="recalc()" class="input-no-affix" />
-                <span class="input-suffix">hrs</span>
-              </div>
-            </div>
-            <div class="field" style="align-self:end;padding-bottom:0.125rem;">
-              <span style="font-size:0.75rem;color:var(--wha-ink-soft);line-height:1.5;">
-                Lost capacity cost = absent hours × ordinary rate
-              </span>
-            </div>
-          </div>
-        </div>
+        <button class="btn-add-worker" onclick="addWorker()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Add Worker
+        </button>
       </div>
 
-      <!-- Panel 3: Modified Duties -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon" style="background:rgba(168,130,154,0.12);">🔧</div>
-          <div class="card-head-text">
-            <div class="card-head-title">Modified Duties</div>
-            <div class="card-head-sub">Hours worked at reduced capacity during this pay run</div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="field-grid">
-            <div class="field">
-              <label for="f-mod-hrs">Modified Duty Hours</label>
-              <div class="input-wrap suffix-only">
-                <input type="number" id="f-mod-hrs" value="36" min="0" step="1" oninput="recalc()" class="input-no-affix" />
-                <span class="input-suffix">hrs</span>
-              </div>
-            </div>
-            <div class="field">
-              <label for="f-mod-pct">Productivity While on Duties</label>
-              <div class="input-wrap suffix-only">
-                <input type="number" id="f-mod-pct" value="60" min="0" max="100" step="5" oninput="recalc()" class="input-no-affix" />
-                <span class="input-suffix">%</span>
-              </div>
-            </div>
-          </div>
-          <p style="font-size:0.75rem;color:var(--wha-ink-soft);margin-top:0.75rem;">
-            Lost productivity = modified hours × (1 − productivity%) × ordinary rate. The productive portion is not counted as a drain.
-          </p>
-        </div>
-      </div>
+      <!-- Worker cards container -->
+      <div id="workers-container"></div>
+    </div>
 
-      <!-- Panel 4: Replacement Labour -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon" style="background:rgba(148,136,180,0.12);">🔄</div>
-          <div class="card-head-text">
-            <div class="card-head-title">Replacement Labour</div>
-            <div class="card-head-sub">Only the premium above the injured worker's rate counts</div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="field-grid">
-            <div class="field">
-              <label for="f-rep-hrs">Replacement Labour Hours</label>
-              <div class="input-wrap suffix-only">
-                <input type="number" id="f-rep-hrs" value="40" min="0" step="1" oninput="recalc()" class="input-no-affix" />
-                <span class="input-suffix">hrs</span>
-              </div>
-            </div>
-            <div class="field">
-              <label for="f-rep-rate">Replacement Hourly Rate</label>
-              <div class="input-wrap">
-                <span class="input-prefix">$</span>
-                <input type="number" id="f-rep-rate" value="45.00" min="0" step="0.50" oninput="recalc()" />
-              </div>
-            </div>
-          </div>
-          <p style="font-size:0.75rem;color:var(--wha-ink-soft);margin-top:0.75rem;">
-            If replacement labour is cheaper than the injured worker's rate the premium is negative (a saving).
-          </p>
-        </div>
-      </div>
+    <!-- RIGHT: results panel -->
+    <div class="results-panel">
 
-      <!-- Panel 5: Overtime -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon" style="background:rgba(176,112,48,0.1);">⏱</div>
-          <div class="card-head-text">
-            <div class="card-head-title">Overtime</div>
-            <div class="card-head-sub">Only the loading above ordinary time counts as a drain</div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="field-grid field-grid-3">
-            <div class="field">
-              <label for="f-ot-hrs">Overtime Hours</label>
-              <div class="input-wrap suffix-only">
-                <input type="number" id="f-ot-hrs" value="8" min="0" step="1" oninput="recalc()" class="input-no-affix" />
-                <span class="input-suffix">hrs</span>
-              </div>
-            </div>
-            <div class="field">
-              <label for="f-ot-rate">Overtime Worker Rate</label>
-              <div class="input-wrap">
-                <span class="input-prefix">$</span>
-                <input type="number" id="f-ot-rate" value="38.00" min="0" step="0.50" oninput="recalc()" />
-              </div>
-            </div>
-            <div class="field">
-              <label for="f-ot-mult">OT Multiplier</label>
-              <div class="input-wrap">
-                <select id="f-ot-mult" onchange="recalc()" class="input-no-affix">
-                  <option value="1.25">1.25×</option>
-                  <option value="1.5" selected>1.5×</option>
-                  <option value="1.75">1.75×</option>
-                  <option value="2.0">2.0×</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <p style="font-size:0.75rem;color:var(--wha-ink-soft);margin-top:0.75rem;">
-            OT premium = overtime hours × worker rate × (multiplier − 1). E.g. 8 hrs at $38 at 1.5× = 8 × $38 × 0.5 = $152.
-          </p>
-        </div>
-      </div>
-
-      <!-- Panel 6: Coordination (optional) -->
-      <div class="card">
-        <div class="card-head">
-          <div class="card-icon card-icon-green">📋</div>
-          <div class="card-head-text">
-            <div class="card-head-title">Internal Coordination</div>
-            <div class="card-head-sub">Admin, supervisor, HR, RTW &amp; safety time</div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="coord-row" style="margin-bottom:0.5rem;">
-            <span class="coord-row-label" style="font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--wha-purple);padding-bottom:0;">Role</span>
-            <span class="coord-row-label" style="text-align:right;">Hrs</span>
-            <span class="coord-row-label" style="text-align:right;">$/hr</span>
-          </div>
-          <div class="coord-row">
-            <span class="coord-row-label">Payroll Admin</span>
-            <div class="input-wrap suffix-only" style="width:80px;">
-              <input type="number" id="f-c1-hrs" value="1" min="0" step="0.5" oninput="recalc()" class="input-no-affix" style="padding:0.5rem;text-align:right;font-size:0.875rem;" />
-              <span class="input-suffix" style="padding:0.5rem 0.5rem;">h</span>
-            </div>
-            <div class="input-wrap" style="width:96px;">
-              <span class="input-prefix" style="padding:0.5rem 0.5rem;">$</span>
-              <input type="number" id="f-c1-rate" value="35" min="0" step="1" oninput="recalc()" style="padding:0.5rem;font-size:0.875rem;text-align:right;" />
-            </div>
-          </div>
-          <div class="coord-row">
-            <span class="coord-row-label">Supervisor</span>
-            <div class="input-wrap suffix-only" style="width:80px;">
-              <input type="number" id="f-c2-hrs" value="2" min="0" step="0.5" oninput="recalc()" class="input-no-affix" style="padding:0.5rem;text-align:right;font-size:0.875rem;" />
-              <span class="input-suffix" style="padding:0.5rem 0.5rem;">h</span>
-            </div>
-            <div class="input-wrap" style="width:96px;">
-              <span class="input-prefix" style="padding:0.5rem 0.5rem;">$</span>
-              <input type="number" id="f-c2-rate" value="48" min="0" step="1" oninput="recalc()" style="padding:0.5rem;font-size:0.875rem;text-align:right;" />
-            </div>
-          </div>
-          <div class="coord-row">
-            <span class="coord-row-label">HR / RTW / Safety</span>
-            <div class="input-wrap suffix-only" style="width:80px;">
-              <input type="number" id="f-c3-hrs" value="3" min="0" step="0.5" oninput="recalc()" class="input-no-affix" style="padding:0.5rem;text-align:right;font-size:0.875rem;" />
-              <span class="input-suffix" style="padding:0.5rem 0.5rem;">h</span>
-            </div>
-            <div class="input-wrap" style="width:96px;">
-              <span class="input-prefix" style="padding:0.5rem 0.5rem;">$</span>
-              <input type="number" id="f-c3-rate" value="55" min="0" step="1" oninput="recalc()" style="padding:0.5rem;font-size:0.875rem;text-align:right;" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /LEFT -->
-
-    <!-- ── RIGHT: Results ────────────────────────────────────────────── -->
-    <div class="card card-sticky" style="overflow:hidden;padding:0;">
-
-      <!-- Total -->
       <div class="result-hero">
-        <p class="result-hero-eyebrow">Total Productivity Drain This Pay Run</p>
+        <p class="result-hero-eyebrow">Combined Drain This Pay Run</p>
         <div class="result-hero-num" id="r-total">$0</div>
-        <p class="result-hero-sub" id="r-normal-val">Normal pay-run labour value: $0</p>
+        <p class="result-hero-sub" id="r-workers-sub">across 1 worker</p>
         <div class="result-hero-runrate">
-          <span class="result-hero-runrate-label">Annualised run-rate</span>
-          <span class="result-hero-runrate-num" id="r-runrate">$0/yr</span>
+          <span class="rhr-label">Annualised run-rate</span>
+          <span class="rhr-num" id="r-runrate">$0/yr</span>
         </div>
       </div>
 
-      <!-- Breakdown -->
+      <!-- Per-worker list -->
+      <div class="worker-list-section">
+        <p class="worker-list-title">Per Worker</p>
+        <div id="r-worker-list"></div>
+      </div>
+
+      <!-- Component breakdown -->
       <div class="breakdown-section">
-        <p class="breakdown-title">Cost Breakdown</p>
+        <p class="breakdown-title">Cost Component Totals</p>
 
         <div class="breakdown-row">
-          <div class="breakdown-left">
-            <div class="brow-pip" style="background:var(--wha-gold);align-self:stretch;"></div>
-            <div>
+          <div class="brow-left">
+            <div class="brow-pip" style="background:var(--wha-gold);"></div>
+            <div style="flex:1;">
               <div class="brow-name">Lost Capacity (Absence)</div>
-              <div class="brow-formula" id="f-absent-formula">0 hrs × $0/hr</div>
-              <div class="bar-wrap" style="width:160px;max-width:100%;"><div class="bar-fill" id="bar-absent" style="background:var(--wha-gold);width:0%"></div></div>
+              <div class="bar-wrap"><div class="bar-fill" id="bar-absent" style="background:var(--wha-gold);width:0%"></div></div>
             </div>
           </div>
           <div style="text-align:right;">
             <div class="brow-amount" id="r-absent">$0</div>
-            <div style="font-size:0.75rem;color:var(--wha-purple);" id="r-absent-pct">—</div>
+            <div class="brow-pct" id="r-absent-pct">—</div>
           </div>
         </div>
 
         <div class="breakdown-row">
-          <div class="breakdown-left">
-            <div class="brow-pip" style="background:var(--wha-mauve);align-self:stretch;"></div>
-            <div>
-              <div class="brow-name">Lost Modified-Duty Productivity</div>
-              <div class="brow-formula" id="f-mod-formula">0 hrs × 40% × $0/hr</div>
-              <div class="bar-wrap" style="width:160px;max-width:100%;"><div class="bar-fill" id="bar-mod" style="background:var(--wha-mauve);width:0%"></div></div>
+          <div class="brow-left">
+            <div class="brow-pip" style="background:var(--wha-mauve);"></div>
+            <div style="flex:1;">
+              <div class="brow-name">Modified-Duty Productivity Loss</div>
+              <div class="bar-wrap"><div class="bar-fill" id="bar-mod" style="background:var(--wha-mauve);width:0%"></div></div>
             </div>
           </div>
           <div style="text-align:right;">
             <div class="brow-amount" id="r-mod">$0</div>
-            <div style="font-size:0.75rem;color:var(--wha-purple);" id="r-mod-pct">—</div>
+            <div class="brow-pct" id="r-mod-pct">—</div>
           </div>
         </div>
 
         <div class="breakdown-row">
-          <div class="breakdown-left">
-            <div class="brow-pip" style="background:var(--wha-lavender);align-self:stretch;"></div>
-            <div>
+          <div class="brow-left">
+            <div class="brow-pip" style="background:var(--wha-lavender);"></div>
+            <div style="flex:1;">
               <div class="brow-name">Replacement Labour Premium</div>
-              <div class="brow-formula" id="f-rep-formula">0 hrs × ($0 − $0)</div>
-              <div class="bar-wrap" style="width:160px;max-width:100%;"><div class="bar-fill" id="bar-rep" style="background:var(--wha-lavender);width:0%"></div></div>
+              <div class="bar-wrap"><div class="bar-fill" id="bar-rep" style="background:var(--wha-lavender);width:0%"></div></div>
             </div>
           </div>
           <div style="text-align:right;">
             <div class="brow-amount" id="r-rep">$0</div>
-            <div style="font-size:0.75rem;color:var(--wha-purple);" id="r-rep-pct">—</div>
+            <div class="brow-pct" id="r-rep-pct">—</div>
           </div>
         </div>
 
         <div class="breakdown-row">
-          <div class="breakdown-left">
-            <div class="brow-pip" style="background:var(--warning);align-self:stretch;"></div>
-            <div>
+          <div class="brow-left">
+            <div class="brow-pip" style="background:var(--warning);"></div>
+            <div style="flex:1;">
               <div class="brow-name">Overtime Premium</div>
-              <div class="brow-formula" id="f-ot-formula">0 hrs × $0 × 0.5</div>
-              <div class="bar-wrap" style="width:160px;max-width:100%;"><div class="bar-fill" id="bar-ot" style="background:var(--warning);width:0%"></div></div>
+              <div class="bar-wrap"><div class="bar-fill" id="bar-ot" style="background:var(--warning);width:0%"></div></div>
             </div>
           </div>
           <div style="text-align:right;">
             <div class="brow-amount" id="r-ot">$0</div>
-            <div style="font-size:0.75rem;color:var(--wha-purple);" id="r-ot-pct">—</div>
+            <div class="brow-pct" id="r-ot-pct">—</div>
           </div>
         </div>
 
         <div class="breakdown-row">
-          <div class="breakdown-left">
-            <div class="brow-pip" style="background:var(--primary);align-self:stretch;"></div>
-            <div>
-              <div class="brow-name">Internal Coordination Cost</div>
-              <div class="brow-formula" id="f-coord-formula">Admin + Supervisor + HR/RTW</div>
-              <div class="bar-wrap" style="width:160px;max-width:100%;"><div class="bar-fill" id="bar-coord" style="background:var(--primary);width:0%"></div></div>
+          <div class="brow-left">
+            <div class="brow-pip" style="background:var(--primary);"></div>
+            <div style="flex:1;">
+              <div class="brow-name">Internal Coordination</div>
+              <div class="bar-wrap"><div class="bar-fill" id="bar-coord" style="background:var(--primary);width:0%"></div></div>
             </div>
           </div>
           <div style="text-align:right;">
             <div class="brow-amount" id="r-coord">$0</div>
-            <div style="font-size:0.75rem;color:var(--wha-purple);" id="r-coord-pct">—</div>
+            <div class="brow-pct" id="r-coord-pct">—</div>
           </div>
         </div>
       </div>
 
-      <!-- WHA Impact -->
+      <!-- WHA savings -->
       <div class="wha-block">
         <div class="wha-block-head">
           <span class="wha-block-label">With Work Healthy Australia</span>
           <span class="wha-badge">Up to 80% reduction</span>
         </div>
         <div class="wha-row">
-          <span class="wha-row-label">Pay-run savings (80% recovery)</span>
+          <span class="wha-row-label">Pay-run savings (80%)</span>
           <span class="wha-row-value" id="r-savings">$0</span>
         </div>
         <div class="wha-row">
@@ -1111,7 +614,7 @@
           <span class="wha-row-value" id="r-annual-savings">$0/yr</span>
         </div>
         <div class="wha-row">
-          <span class="wha-row-label">Residual drain (retained 20%)</span>
+          <span class="wha-row-label">Residual drain (20%)</span>
           <span class="wha-row-value" id="r-retained">$0</span>
         </div>
       </div>
@@ -1123,78 +626,76 @@
           <span class="roi-chip-label">Maximum ROI<br/>delivered by WHA</span>
         </div>
         <div class="roi-chip">
-          <span class="roi-chip-num" style="color:var(--success);" id="r-drain-pct-normal">0%</span>
-          <span class="roi-chip-label">Drain as % of normal<br/>pay-run labour cost</span>
+          <span class="roi-chip-num" style="color:var(--success);" id="r-drain-pct">0%</span>
+          <span class="roi-chip-label">Drain vs. normal<br/>pay-run labour cost</span>
         </div>
       </div>
 
       <!-- CTA -->
       <div class="cta-block">
         <h3>Get your personalised RTW ROI analysis</h3>
-        <p>Our clinical team will model your full program cost and projected outcomes — no obligation, free of charge.</p>
+        <p>Our clinical team will model your program cost and projected outcomes — free of charge.</p>
         <a class="cta-btn" href="https://www.workhealthyaus.com.au/contact" target="_blank" rel="noopener">
           Request Free Analysis
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
         <p class="cta-note">No obligation · Response within 1 business day</p>
       </div>
 
-    </div><!-- /RIGHT -->
+    </div><!-- /results panel -->
   </div>
 
-  <!-- ── Methodology cards ──────────────────────────────────────────── -->
+  <!-- Methodology -->
   <div class="method-section">
     <div class="method-head">
       <h2>How each cost component is calculated</h2>
-      <p>The calculator isolates the economic cost that sits around a claim — not the claim itself — using six distinct cost drivers.</p>
+      <p>Six distinct cost drivers — each isolating the economic impact that sits around a workers' compensation claim, not the claim itself.</p>
     </div>
     <div class="method-grid">
       <div class="method-card">
         <div class="method-pip" style="background:var(--wha-gold);"></div>
-        <h4>Lost Capacity (Absence)</h4>
-        <p>The full productive value of time the worker was completely absent — even if covered by workers' comp, this capacity was gone from your operation.</p>
+        <h4>Lost Capacity</h4>
+        <p>Full productive value of absent hours. Even if covered by comp, this capacity was gone.</p>
         <div class="method-formula">absent_hrs × ordinary_rate</div>
       </div>
       <div class="method-card">
         <div class="method-pip" style="background:var(--wha-mauve);"></div>
-        <h4>Modified-Duty Productivity Loss</h4>
-        <p>Only the lost portion counts. A worker on 60% productivity delivers 40% lost value on modified duties. The 60% productive portion is not a drain.</p>
+        <h4>Modified-Duty Loss</h4>
+        <p>Only the lost portion. 60% productivity = 40% lost. The productive share isn't a drain.</p>
         <div class="method-formula">mod_hrs × (1 − prod%) × ordinary_rate</div>
       </div>
       <div class="method-card">
         <div class="method-pip" style="background:var(--wha-lavender);"></div>
-        <h4>Replacement Labour Premium</h4>
-        <p>Only the difference between replacement cost and the injured worker's ordinary rate. If replacement is cheaper, this shows as a negative (saving).</p>
+        <h4>Replacement Premium</h4>
+        <p>Only the rate difference above the injured worker's ordinary rate. Can be negative.</p>
         <div class="method-formula">rep_hrs × (rep_rate − ordinary_rate)</div>
       </div>
       <div class="method-card">
         <div class="method-pip" style="background:var(--warning);"></div>
         <h4>Overtime Premium</h4>
-        <p>Only the loading above ordinary time. 20 hours at $45 at 1.5× carries a $450 premium — the ordinary-time portion is normal labour cost, not a drain.</p>
+        <p>Only the loading above ordinary time. 8 hrs at $38 at 1.5× = 8 × $38 × 0.5 = $152.</p>
         <div class="method-formula">ot_hrs × ot_rate × (multiplier − 1)</div>
       </div>
       <div class="method-card">
         <div class="method-pip" style="background:var(--primary);"></div>
-        <h4>Internal Coordination</h4>
-        <p>Payroll admin processing the claim, supervisors adjusting duties, and HR/RTW/safety staff managing the case. Often invisible but consistently significant.</p>
+        <h4>Coordination Cost</h4>
+        <p>Payroll, supervisor, and HR/RTW/safety time spent managing the claim.</p>
         <div class="method-formula">Σ (role_hrs × role_rate)</div>
       </div>
       <div class="method-card">
         <div class="method-pip" style="background:var(--success);"></div>
         <h4>Annualised Run-Rate</h4>
-        <p>Not a prediction — a run-rate indicator. It scales the current pay-run drain by the number of pay periods per year. Useful for budgeting and business case modelling.</p>
+        <p>Scales the current pay-run drain by pay frequency — a run-rate indicator, not a forecast.</p>
         <div class="method-formula">pay_run_drain × pay_runs_per_year</div>
       </div>
     </div>
   </div>
 
   <div class="disclaimer">
-    <strong>Important:</strong> This calculator estimates the indirect productivity costs surrounding a workers' compensation claim. It does not calculate statutory compensation entitlements, insurance premiums, or legal costs. Replacement labour premium can be negative where replacement workers are paid less than the injured worker. Results are indicative only and depend on values entered. WHA savings and ROI figures are based on published program outcomes across the WHA client portfolio; actual results depend on industry, claim complexity, workforce size, and program design. Always verify calculations with your payroll system and financial advisors.
+    <strong>Important:</strong> This calculator estimates indirect productivity costs surrounding workers' compensation claims. It does not calculate statutory entitlements, premiums, or legal costs. Replacement labour premium may be negative where replacement workers cost less than the injured worker. WHA savings and ROI figures are based on published program outcomes; actual results depend on claim complexity, industry, workforce size, and program design.
   </div>
-
 </main>
 
-<!-- ── Footer ───────────────────────────────────────────────────────── -->
 <footer>
   <div class="footer-inner">
     <img class="footer-logo"
@@ -1211,113 +712,358 @@
 </footer>
 
 <script>
-  // ── Helpers ────────────────────────────────────────────────────────────
-  const $ = id => document.getElementById(id);
-  const num = id => Math.max(0, parseFloat($(id).value) || 0);
+// ── State ──────────────────────────────────────────────────────────────────
+let workerSeq = 0;
+const workers = [];  // array of { id, el }
 
-  function fmt(v, decimals = 0) {
-    const abs = Math.abs(v);
-    const sign = v < 0 ? '−$' : '$';
-    if (abs >= 1_000_000) return sign + (abs / 1_000_000).toFixed(2) + 'M';
-    if (abs >= 1_000)     return sign + abs.toLocaleString('en-AU', { maximumFractionDigits: decimals });
-    return sign + abs.toFixed(decimals);
-  }
+const WORKER_COLORS = ['#1B6080','#C9A840','#A8829A','#9488B4','#1E7A50','#B07030','#5A6EA8','#7A5C3A'];
 
-  function pct(part, total) {
-    if (!total || !isFinite(total)) return '—';
-    return (Math.abs(part) / total * 100).toFixed(1) + '%';
-  }
+// ── Helpers ────────────────────────────────────────────────────────────────
+function fmt(v) {
+  const abs = Math.abs(v), sign = v < 0 ? '−$' : '$';
+  if (abs >= 1_000_000) return sign + (abs/1_000_000).toFixed(2) + 'M';
+  if (abs >= 1_000)     return sign + Math.round(abs).toLocaleString('en-AU');
+  return sign + Math.round(abs);
+}
+function pct(part, total) {
+  if (!total || !isFinite(total)) return '—';
+  return (Math.abs(part)/total*100).toFixed(1) + '%';
+}
+function setTxt(id, v) { const e = document.getElementById(id); if (e) e.textContent = v; }
+function setW(id, w)   { const e = document.getElementById(id); if (e) e.style.width = Math.min(100,Math.max(0,w)).toFixed(1)+'%'; }
+function g(el, sel)    { return el.querySelector(sel); }
+function gn(el, sel)   { return Math.max(0, parseFloat(g(el,sel).value) || 0); }
 
-  function setTxt(id, val) { const e = $(id); if (e) e.textContent = val; }
-  function setWidth(id, w) { const e = $(id); if (e) e.style.width = Math.min(100, Math.max(0, w)).toFixed(1) + '%'; }
+// ── Calc one worker ────────────────────────────────────────────────────────
+function calcWorker(body) {
+  const ordRate   = gn(body, '.f-rate');
+  const normalHrs = gn(body, '.f-normal-hrs');
+  const payFreq   = parseInt(g(body,'.f-pay-freq').value) || 26;
+  const absentHrs = gn(body, '.f-absent-hrs');
+  const modHrs    = gn(body, '.f-mod-hrs');
+  const modPct    = Math.min(100, gn(body, '.f-mod-pct'));
+  const repHrs    = gn(body, '.f-rep-hrs');
+  const repRate   = gn(body, '.f-rep-rate');
+  const otHrs     = gn(body, '.f-ot-hrs');
+  const otRate    = gn(body, '.f-ot-rate');
+  const otMult    = parseFloat(g(body,'.f-ot-mult').value) || 1.5;
+  const c1h = gn(body,'.f-c1-hrs'), c1r = gn(body,'.f-c1-rate');
+  const c2h = gn(body,'.f-c2-hrs'), c2r = gn(body,'.f-c2-rate');
+  const c3h = gn(body,'.f-c3-hrs'), c3r = gn(body,'.f-c3-rate');
 
-  // ── Core calculation ───────────────────────────────────────────────────
-  function recalc() {
-    // Inputs
-    const ordRate    = num('f-rate');
-    const normalHrs  = num('f-normal-hrs');
-    const payFreq    = parseInt($('f-pay-freq').value) || 26;
-    const absentHrs  = num('f-absent-hrs');
-    const modHrs     = num('f-mod-hrs');
-    const modPct     = Math.min(100, num('f-mod-pct'));
-    const repHrs     = num('f-rep-hrs');
-    const repRate    = num('f-rep-rate');
-    const otHrs      = num('f-ot-hrs');
-    const otRate     = num('f-ot-rate');
-    const otMult     = parseFloat($('f-ot-mult').value) || 1.5;
-    const c1hrs      = num('f-c1-hrs'), c1rate = num('f-c1-rate');
-    const c2hrs      = num('f-c2-hrs'), c2rate = num('f-c2-rate');
-    const c3hrs      = num('f-c3-hrs'), c3rate = num('f-c3-rate');
+  const normalVal  = normalHrs * ordRate;
+  const absent     = absentHrs * ordRate;
+  const mod        = modHrs * ((100 - modPct) / 100) * ordRate;
+  const rep        = repHrs * (repRate - ordRate);
+  const ot         = otHrs * otRate * (otMult - 1);
+  const coord      = (c1h*c1r) + (c2h*c2r) + (c3h*c3r);
+  const total      = absent + mod + rep + ot + coord;
+  const runRate    = total * payFreq;
 
-    // Derived
-    const normalVal     = normalHrs * ordRate;
-    const absentCost    = absentHrs * ordRate;
-    const lostModPct    = (100 - modPct) / 100;
-    const modCost       = modHrs * lostModPct * ordRate;
-    const repPremium    = repHrs * (repRate - ordRate);  // can be negative
-    const otPremium     = otHrs * otRate * (otMult - 1);
-    const coordCost     = (c1hrs * c1rate) + (c2hrs * c2rate) + (c3hrs * c3rate);
-    const total         = absentCost + modCost + repPremium + otPremium + coordCost;
-    const runRate       = total * payFreq;
-    const savings       = total * 0.80;
-    const annualSavings = runRate * 0.80;
-    const retained      = total * 0.20;
-    const drainPctNorm  = normalVal > 0 ? (total / normalVal * 100) : 0;
+  return { normalVal, absent, mod, rep, ot, coord, total, runRate, payFreq };
+}
 
-    // Positive total for bar widths
-    const maxComponent  = Math.max(absentCost, modCost, Math.abs(repPremium), otPremium, coordCost, 1);
+// ── Build worker card HTML ─────────────────────────────────────────────────
+function buildWorkerHTML(id, index) {
+  const n = index + 1;
+  return `
+<div class="worker-card expanded" id="wcard-${id}">
+  <div class="worker-header" onclick="toggleWorker(${id})">
+    <div class="worker-number">${n}</div>
+    <input class="worker-name-input" type="text" placeholder="Worker ${n} / Claim reference"
+           value="Worker ${n}" oninput="recalc()" onclick="event.stopPropagation()" />
+    <div class="worker-header-meta">
+      <span class="worker-total-badge" id="wbadge-${id}">$0</span>
+      <svg class="worker-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      <button class="btn-remove" onclick="removeWorker(${id}); event.stopPropagation();" title="Remove worker">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="worker-body">
 
-    // ── Update results ─────────────────────────────────────────────────
-    setTxt('r-total',         fmt(total));
-    setTxt('r-normal-val',    'Normal pay-run labour value: ' + fmt(normalVal));
-    setTxt('r-runrate',       fmt(runRate) + '/yr');
+    <!-- Worker & Pay Run -->
+    <div class="section-divider" style="margin-top:0">
+      <div class="section-pip" style="background:var(--primary)"></div>
+      <span class="section-label">Worker &amp; Pay Run</span>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="field-grid">
+      <div class="field">
+        <label>Ordinary Hourly Rate</label>
+        <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="f-rate" value="38.00" min="0" step="0.50" oninput="recalc()" /></div>
+      </div>
+      <div class="field">
+        <label>Normal Hours This Pay Run</label>
+        <div class="input-wrap suffix-only"><input type="number" class="f-normal-hrs bare" value="76" min="0" step="1" oninput="recalc()" /><span class="input-suffix">hrs</span></div>
+      </div>
+      <div class="field field-full">
+        <label>Pay Run Frequency</label>
+        <select class="f-pay-freq bare" onchange="recalc()">
+          <option value="52">Weekly (52/year)</option>
+          <option value="26" selected>Fortnightly (26/year)</option>
+          <option value="24">Semi-monthly (24/year)</option>
+          <option value="12">Monthly (12/year)</option>
+        </select>
+      </div>
+    </div>
 
-    // Absent
-    setTxt('r-absent',        fmt(absentCost));
-    setTxt('r-absent-pct',    pct(absentCost, total));
-    setTxt('f-absent-formula', absentHrs.toFixed(0) + ' hrs × ' + fmt(ordRate, 2) + '/hr');
-    setWidth('bar-absent',    absentCost / maxComponent * 100);
+    <!-- Absence -->
+    <div class="section-divider">
+      <div class="section-pip" style="background:var(--wha-gold)"></div>
+      <span class="section-label">Absence</span>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="field-grid">
+      <div class="field">
+        <label>Hours Absent</label>
+        <div class="input-wrap suffix-only"><input type="number" class="f-absent-hrs bare" value="40" min="0" step="1" oninput="recalc()" /><span class="input-suffix">hrs</span></div>
+      </div>
+      <div class="field" style="justify-content:flex-end;">
+        <span style="font-size:0.75rem;color:var(--wha-ink-soft);line-height:1.5;padding-top:1.5rem;display:block;">absent hrs × ordinary rate</span>
+      </div>
+    </div>
 
-    // Modified
-    setTxt('r-mod',           fmt(modCost));
-    setTxt('r-mod-pct',       pct(modCost, total));
-    setTxt('f-mod-formula',   modHrs.toFixed(0) + ' hrs × ' + lostModPct.toFixed(0)*100 / 100 * 100 + '% loss × ' + fmt(ordRate, 2) + '/hr');
-    $('f-mod-formula').textContent = modHrs.toFixed(0) + ' hrs × ' + (100 - modPct).toFixed(0) + '% lost × ' + fmt(ordRate, 2) + '/hr';
-    setWidth('bar-mod',       modCost / maxComponent * 100);
+    <!-- Modified Duties -->
+    <div class="section-divider">
+      <div class="section-pip" style="background:var(--wha-mauve)"></div>
+      <span class="section-label">Modified Duties</span>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="field-grid">
+      <div class="field">
+        <label>Modified Duty Hours</label>
+        <div class="input-wrap suffix-only"><input type="number" class="f-mod-hrs bare" value="36" min="0" step="1" oninput="recalc()" /><span class="input-suffix">hrs</span></div>
+      </div>
+      <div class="field">
+        <label>Productivity While on Duties</label>
+        <div class="input-wrap suffix-only"><input type="number" class="f-mod-pct bare" value="60" min="0" max="100" step="5" oninput="recalc()" /><span class="input-suffix">%</span></div>
+      </div>
+    </div>
 
-    // Replacement
-    const repEl = $('r-rep');
-    if (repEl) {
-      repEl.textContent = (repPremium < 0 ? '−' : '') + fmt(Math.abs(repPremium));
-      repEl.className   = 'brow-amount' + (repPremium < 0 ? ' negative' : repPremium === 0 ? ' zero' : '');
-    }
-    setTxt('r-rep-pct', repPremium < 0 ? 'saving' : pct(repPremium, total));
-    $('f-rep-formula').textContent = repHrs.toFixed(0) + ' hrs × (' + fmt(repRate, 2) + ' − ' + fmt(ordRate, 2) + ')';
-    setWidth('bar-rep', Math.abs(repPremium) / maxComponent * 100);
+    <!-- Replacement Labour -->
+    <div class="section-divider">
+      <div class="section-pip" style="background:var(--wha-lavender)"></div>
+      <span class="section-label">Replacement Labour</span>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="field-grid">
+      <div class="field">
+        <label>Replacement Hours</label>
+        <div class="input-wrap suffix-only"><input type="number" class="f-rep-hrs bare" value="40" min="0" step="1" oninput="recalc()" /><span class="input-suffix">hrs</span></div>
+      </div>
+      <div class="field">
+        <label>Replacement Hourly Rate</label>
+        <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="f-rep-rate" value="45.00" min="0" step="0.50" oninput="recalc()" /></div>
+      </div>
+    </div>
 
-    // OT
-    setTxt('r-ot',            fmt(otPremium));
-    setTxt('r-ot-pct',        pct(otPremium, total));
-    $('f-ot-formula').textContent = otHrs.toFixed(0) + ' hrs × ' + fmt(otRate, 2) + ' × ' + (otMult - 1).toFixed(2);
-    setWidth('bar-ot',        otPremium / maxComponent * 100);
+    <!-- Overtime -->
+    <div class="section-divider">
+      <div class="section-pip" style="background:var(--warning)"></div>
+      <span class="section-label">Overtime</span>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="field-grid field-grid-3">
+      <div class="field">
+        <label>Overtime Hours</label>
+        <div class="input-wrap suffix-only"><input type="number" class="f-ot-hrs bare" value="8" min="0" step="1" oninput="recalc()" /><span class="input-suffix">hrs</span></div>
+      </div>
+      <div class="field">
+        <label>OT Worker Rate</label>
+        <div class="input-wrap"><span class="input-prefix">$</span><input type="number" class="f-ot-rate" value="38.00" min="0" step="0.50" oninput="recalc()" /></div>
+      </div>
+      <div class="field">
+        <label>Multiplier</label>
+        <select class="f-ot-mult bare" onchange="recalc()">
+          <option value="1.25">1.25×</option>
+          <option value="1.5" selected>1.5×</option>
+          <option value="1.75">1.75×</option>
+          <option value="2.0">2.0×</option>
+        </select>
+      </div>
+    </div>
 
-    // Coordination
-    setTxt('r-coord',         fmt(coordCost));
-    setTxt('r-coord-pct',     pct(coordCost, total));
-    $('f-coord-formula').textContent = fmt(c1hrs * c1rate) + ' + ' + fmt(c2hrs * c2rate) + ' + ' + fmt(c3hrs * c3rate);
-    setWidth('bar-coord',     coordCost / maxComponent * 100);
+    <!-- Coordination -->
+    <div class="section-divider">
+      <div class="section-pip" style="background:var(--primary)"></div>
+      <span class="section-label">Internal Coordination</span>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="coord-grid">
+      <span class="coord-grid-head">Role</span>
+      <span class="coord-grid-head" style="text-align:right;">Hrs</span>
+      <span class="coord-grid-head coord-rate" style="text-align:right;">$/hr</span>
+    </div>
+    <div class="coord-grid">
+      <span class="coord-label">Payroll Admin</span>
+      <div class="input-wrap suffix-only"><input type="number" class="f-c1-hrs bare" value="1" min="0" step="0.5" oninput="recalc()" style="padding:0.45rem;text-align:right;font-size:0.8125rem;" /><span class="input-suffix" style="padding:0.45rem 0.5rem;">h</span></div>
+      <div class="input-wrap coord-rate"><span class="input-prefix" style="padding:0.45rem 0.5rem;">$</span><input type="number" class="f-c1-rate" value="35" min="0" step="1" oninput="recalc()" style="padding:0.45rem;font-size:0.8125rem;text-align:right;" /></div>
+    </div>
+    <div class="coord-grid">
+      <span class="coord-label">Supervisor</span>
+      <div class="input-wrap suffix-only"><input type="number" class="f-c2-hrs bare" value="2" min="0" step="0.5" oninput="recalc()" style="padding:0.45rem;text-align:right;font-size:0.8125rem;" /><span class="input-suffix" style="padding:0.45rem 0.5rem;">h</span></div>
+      <div class="input-wrap coord-rate"><span class="input-prefix" style="padding:0.45rem 0.5rem;">$</span><input type="number" class="f-c2-rate" value="48" min="0" step="1" oninput="recalc()" style="padding:0.45rem;font-size:0.8125rem;text-align:right;" /></div>
+    </div>
+    <div class="coord-grid" style="margin-bottom:0">
+      <span class="coord-label">HR / RTW / Safety</span>
+      <div class="input-wrap suffix-only"><input type="number" class="f-c3-hrs bare" value="3" min="0" step="0.5" oninput="recalc()" style="padding:0.45rem;text-align:right;font-size:0.8125rem;" /><span class="input-suffix" style="padding:0.45rem 0.5rem;">h</span></div>
+      <div class="input-wrap coord-rate"><span class="input-prefix" style="padding:0.45rem 0.5rem;">$</span><input type="number" class="f-c3-rate" value="55" min="0" step="1" oninput="recalc()" style="padding:0.45rem;font-size:0.8125rem;text-align:right;" /></div>
+    </div>
 
-    // WHA savings
-    setTxt('r-savings',       fmt(savings));
-    setTxt('r-annual-savings', fmt(annualSavings) + '/yr');
-    setTxt('r-retained',      fmt(retained));
+    <!-- Per-worker mini result -->
+    <div class="worker-result" id="wresult-${id}">
+      <div class="worker-result-item">
+        <div class="worker-result-label">This Pay Run</div>
+        <div class="worker-result-value" id="wr-total-${id}">$0</div>
+      </div>
+      <div class="worker-result-item">
+        <div class="worker-result-label">Run-Rate /yr</div>
+        <div class="worker-result-value gold" id="wr-runrate-${id}">$0</div>
+      </div>
+      <div class="worker-result-item">
+        <div class="worker-result-label">WHA Savings /yr</div>
+        <div class="worker-result-value" style="color:#7BD89A;" id="wr-savings-${id}">$0</div>
+      </div>
+    </div>
 
-    // Drain % of normal
-    setTxt('r-drain-pct-normal', drainPctNorm.toFixed(0) + '%');
-  }
+  </div><!-- /worker-body -->
+</div>`;
+}
 
-  // ── Init ───────────────────────────────────────────────────────────────
+// ── Add / remove / toggle ──────────────────────────────────────────────────
+function addWorker() {
+  const id = ++workerSeq;
+  const container = document.getElementById('workers-container');
+  const div = document.createElement('div');
+  div.innerHTML = buildWorkerHTML(id, workers.length);
+  const card = div.firstElementChild;
+  container.appendChild(card);
+  workers.push({ id, el: card });
+  renumberWorkers();
   recalc();
+  card.querySelector('.worker-name-input').focus();
+}
+
+function removeWorker(id) {
+  if (workers.length <= 1) return;
+  const idx = workers.findIndex(w => w.id === id);
+  if (idx === -1) return;
+  workers[idx].el.remove();
+  workers.splice(idx, 1);
+  renumberWorkers();
+  recalc();
+}
+
+function toggleWorker(id) {
+  const card = document.getElementById('wcard-' + id);
+  if (card) card.classList.toggle('expanded');
+}
+
+function renumberWorkers() {
+  workers.forEach((w, i) => {
+    const num = w.el.querySelector('.worker-number');
+    if (num) num.textContent = i + 1;
+  });
+}
+
+// ── Master recalc ──────────────────────────────────────────────────────────
+function recalc() {
+  let totAbsent = 0, totMod = 0, totRep = 0, totOt = 0, totCoord = 0;
+  let totTotal = 0, totNormal = 0, totRunRate = 0;
+  const workerResults = [];
+  let payFreq = 26;
+
+  workers.forEach((w, i) => {
+    const body = w.el.querySelector('.worker-body');
+    const r = calcWorker(body);
+    payFreq = r.payFreq;
+
+    totAbsent  += r.absent;
+    totMod     += r.mod;
+    totRep     += r.rep;
+    totOt      += r.ot;
+    totCoord   += r.coord;
+    totTotal   += r.total;
+    totNormal  += r.normalVal;
+    totRunRate += r.runRate;
+
+    // Update per-worker badge and mini result
+    const badge = document.getElementById('wbadge-' + w.id);
+    if (badge) badge.textContent = fmt(r.total);
+    setTxt('wr-total-'   + w.id, fmt(r.total));
+    setTxt('wr-runrate-' + w.id, fmt(r.runRate));
+    setTxt('wr-savings-' + w.id, fmt(r.runRate * 0.8));
+
+    const name = (w.el.querySelector('.worker-name-input').value || 'Worker ' + (i+1)).trim();
+    workerResults.push({ name, total: r.total, color: WORKER_COLORS[i % WORKER_COLORS.length] });
+  });
+
+  const savings      = totTotal * 0.80;
+  const annualSavings = totRunRate * 0.80;
+  const retained     = totTotal * 0.20;
+  const drainPct     = totNormal > 0 ? (totTotal / totNormal * 100) : 0;
+  const maxComp      = Math.max(totAbsent, totMod, Math.abs(totRep), totOt, totCoord, 1);
+  const n            = workers.length;
+
+  // Summary strip
+  setTxt('s-workers',  n);
+  setTxt('s-total',    fmt(totTotal));
+  setTxt('s-runrate',  fmt(totRunRate) + '/yr');
+  setTxt('s-savings',  fmt(annualSavings) + '/yr');
+
+  // Results hero
+  setTxt('r-total',       fmt(totTotal));
+  setTxt('r-workers-sub', 'across ' + n + ' worker' + (n !== 1 ? 's' : ''));
+  setTxt('r-runrate',     fmt(totRunRate) + '/yr');
+
+  // Per-worker list
+  const list = document.getElementById('r-worker-list');
+  list.innerHTML = workerResults.map(wr => `
+    <div class="worker-list-row">
+      <div class="worker-list-dot" style="background:${wr.color}"></div>
+      <span class="worker-list-name">${escHtml(wr.name)}</span>
+      <div style="text-align:right;">
+        <div class="worker-list-amt">${fmt(wr.total)}</div>
+        <div class="worker-list-pct">${pct(wr.total, totTotal)}</div>
+      </div>
+    </div>`).join('');
+
+  // Component totals
+  setTxt('r-absent',    fmt(totAbsent));
+  setTxt('r-absent-pct', pct(totAbsent, totTotal));
+  setW('bar-absent',     totAbsent / maxComp * 100);
+
+  setTxt('r-mod',       fmt(totMod));
+  setTxt('r-mod-pct',   pct(totMod, totTotal));
+  setW('bar-mod',        totMod / maxComp * 100);
+
+  const repEl = document.getElementById('r-rep');
+  if (repEl) { repEl.textContent = fmt(totRep); repEl.className = 'brow-amount' + (totRep < 0 ? ' neg' : ''); }
+  setTxt('r-rep-pct',   totRep < 0 ? 'saving' : pct(totRep, totTotal));
+  setW('bar-rep',        Math.abs(totRep) / maxComp * 100);
+
+  setTxt('r-ot',        fmt(totOt));
+  setTxt('r-ot-pct',    pct(totOt, totTotal));
+  setW('bar-ot',         totOt / maxComp * 100);
+
+  setTxt('r-coord',     fmt(totCoord));
+  setTxt('r-coord-pct', pct(totCoord, totTotal));
+  setW('bar-coord',      totCoord / maxComp * 100);
+
+  // WHA
+  setTxt('r-savings',        fmt(savings));
+  setTxt('r-annual-savings', fmt(annualSavings) + '/yr');
+  setTxt('r-retained',       fmt(retained));
+  setTxt('r-drain-pct',      drainPct.toFixed(0) + '%');
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+addWorker();
 </script>
 
 </body>
